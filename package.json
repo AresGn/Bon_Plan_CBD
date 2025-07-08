@@ -1,0 +1,47 @@
+{
+  "name": "bon-plan-cbd",
+  "version": "1.0.0",
+  "description": "Site e-commerce Bon Plan CBD - La Qualité au Meilleur Prix",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@prisma/client": "^5.7.1",
+    "@stripe/stripe-js": "^2.2.0",
+    "axios": "^1.6.2",
+    "bcryptjs": "^2.4.3",
+    "chart.js": "^4.5.0",
+    "framer-motion": "^10.16.16",
+    "next": "14.0.4",
+    "next-auth": "^4.24.5",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.4.1",
+    "stripe": "^14.10.0",
+    "swiper": "^11.0.5",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8.4.32",
+    "prisma": "^5.7.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
+  }
+}

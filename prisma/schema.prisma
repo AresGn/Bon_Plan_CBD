@@ -1,0 +1,386 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  password       String
+  name           String?
+  role           Role      @default(USER)
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  orders         Order[]
+  reviews        Review[]
+  addresses      Address[]
+  favorites      Favorite[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// Product category
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  products    Product[]
+}
+
+// Product model
+model Product {
+  id           String    @id @default(cuid())
+  name         String
+  slug         String    @unique
+  description  String
+  price        Float
+  originalPrice Float?
+  stock        Int       @default(0)
+  images       String[]
+  cbdRate      Float
+  thcRate      Float
+  status       ProductStatus @default(DRAFT)
+  featured     Boolean   @default(false)
+  
+  categoryId   String
+  category     Category  @relation(fields: [categoryId], references: [id])
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  orderItems   OrderItem[]
+  reviews      Review[]
+  favorites    Favorite[]
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+// Order model
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  status          OrderStatus @default(PENDING)
+  total           Float
+  subtotal        Float
+  shipping        Float       @default(0)
+  tax             Float       @default(0)
+  discount        Float       @default(0)
+  
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  
+  email           String
+  phone           String
+  
+  shippingAddress Json
+  billingAddress  Json?
+  
+  paymentMethod   String
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentId       String?
+  
+  notes           String?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  items           OrderItem[]
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// Order items
+model OrderItem {
+  id        String   @id @default(cuid())
+  quantity  Int
+  price     Float
+  total     Float
+  
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Reviews
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      @default(5)
+  comment   String
+  verified  Boolean  @default(false)
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, productId])
+}
+
+// User addresses
+model Address {
+  id          String   @id @default(cuid())
+  name        String
+  street      String
+  city        String
+  postalCode  String
+  country     String   @default("France")
+  phone       String?
+  isDefault   Boolean  @default(false)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Favorites
+model Favorite {
+  id        String   @id @default(cuid())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, productId])
+}
+
+// Settings for the store
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String
+  phone         String?
+  role          Role      @default(USER)
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  orders        Order[]
+  reviews       Review[]
+  addresses     Address[]
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String
+  price         Float
+  discountPrice Float?
+  images        String[]
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  
+  // CBD specific fields
+  cbdRate       Float?    // Taux de CBD en %
+  thcRate       Float     @default(0.2) // Taux de THC en %
+  origin        String?   // Origine du produit
+  cultivationType CultivationType?
+  terpenes      String[]  // Profil terpénique
+  effects       String[]  // Effets ressentis
+  labAnalysis   String?   // URL vers l'analyse de laboratoire
+  
+  stock         Int       @default(0)
+  isActive      Boolean   @default(true)
+  isFeatured    Boolean   @default(false)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  orderItems    OrderItem[]
+  reviews       Review[]
+}
+
+model Category {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String?
+  image         String?
+  parentId      String?
+  parent        Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children      Category[] @relation("CategoryToCategory")
+  
+  products      Product[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Order {
+  id            String    @id @default(cuid())
+  orderNumber   String    @unique
+  user          User?     @relation(fields: [userId], references: [id])
+  userId        String?
+  
+  // Customer info for guest checkout
+  customerEmail String
+  customerName  String
+  customerPhone String?
+  
+  items         OrderItem[]
+  
+  subtotal      Float
+  shippingCost  Float
+  tax           Float
+  total         Float
+  
+  status        OrderStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentMethod String?
+  stripePaymentIntentId String?
+  
+  shippingAddress Address? @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  shippingAddressId String?
+  
+  billingAddress Address? @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  billingAddressId String?
+  
+  notes         String?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model OrderItem {
+  id            String    @id @default(cuid())
+  order         Order     @relation(fields: [orderId], references: [id])
+  orderId       String
+  product       Product   @relation(fields: [productId], references: [id])
+  productId     String
+  
+  quantity      Int
+  price         Float     // Prix au moment de la commande
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Address {
+  id            String    @id @default(cuid())
+  user          User?     @relation(fields: [userId], references: [id])
+  userId        String?
+  
+  firstName     String
+  lastName      String
+  company       String?
+  addressLine1  String
+  addressLine2  String?
+  city          String
+  postalCode    String
+  country       String    @default("FR")
+  phone         String?
+  
+  isDefault     Boolean   @default(false)
+  
+  shippingOrders Order[]  @relation("ShippingAddress")
+  billingOrders  Order[]  @relation("BillingAddress")
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Review {
+  id            String    @id @default(cuid())
+  product       Product   @relation(fields: [productId], references: [id])
+  productId     String
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+  
+  rating        Int       // 1-5
+  title         String?
+  comment       String
+  isVerified    Boolean   @default(false) // Achat vérifié
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([productId, userId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum CultivationType {
+  INDOOR
+  OUTDOOR
+  GREENHOUSE
+}
