@@ -16,15 +16,6 @@ const categories = [
     badge: 'Bestseller',
   },
   {
-    name: 'Huiles CBD',
-    href: '/produits/huiles',
-    image: '/images/img3.jpg',
-    description: 'Full Spectrum, Broad Spectrum',
-    color: 'from-amber-400 to-amber-600',
-    icon: '💧',
-    badge: null,
-  },
-  {
     name: 'Résines CBD',
     href: '/produits/resines',
     image: '/images/img2.jpg',
@@ -46,7 +37,7 @@ const categories = [
     name: 'Cosmétiques',
     href: '/produits/cosmetiques',
     image: '/images/img5.jpg',
-    description: 'Crèmes, Baumes, Huiles',
+    description: 'Crèmes, Baumes, Soins',
     color: 'from-pink-400 to-pink-600',
     icon: '🧴',
     badge: null,
@@ -133,29 +124,18 @@ export default function Categories() {
                   )}
                   
                   {/* Image Container */}
-                  <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
+                  <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center">
                     {/* Gradient Overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
                     
-                    {/* Icon */}
+                    {/* Icon only, no image */}
                     <motion.div 
-                      className="absolute top-4 left-4 text-4xl"
+                      className="text-6xl z-10"
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
                       {category.icon}
                     </motion.div>
-                    
-                    {/* Product Image */}
-                    <div className="relative h-full w-full p-8">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-contain transform group-hover:scale-110 transition-transform duration-700 ease-out"
-                      />
-                    </div>
-                    
                     {/* Hover Arrow */}
                     <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">

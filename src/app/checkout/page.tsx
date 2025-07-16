@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCartStore } from '@/hooks/useCartStore'
 import { loadStripe } from '@stripe/stripe-js'
@@ -25,6 +26,7 @@ type CheckoutFormData = {
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore()
   const [isProcessing, setIsProcessing] = useState(false)
+  const router = useRouter()
   
   const {
     register,
@@ -54,7 +56,7 @@ export default function CheckoutPage() {
       toast.success('Commande validée avec succès !')
       clearCart()
       // Redirection vers la page de confirmation
-      window.location.href = '/commande/confirmation'
+      router.push('/commande/confirmation')
     } catch (error) {
       toast.error('Une erreur est survenue. Veuillez réessayer.')
     } finally {
@@ -62,8 +64,15 @@ export default function CheckoutPage() {
     }
   }
 
+  // Redirecté si le panier est vide
+  useEffect(() => {
+    if (items.length === 0) {
+      router.push('/panier')
+    }
+  }, [items.length, router])
+  
+  // Ne rien afficher si le panier est vide
   if (items.length === 0) {
-    window.location.href = '/panier'
     return null
   }
 

@@ -1,55 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+})
 
 // GET all products
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    // Check if user is admin
-    if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // Vérifier l'authentification admin
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
     const category = searchParams.get('category')
     const status = searchParams.get('status')
     const search = searchParams.get('search')
+    const sort = searchParams.get('sort')
+    const limit = searchParams.get('limit')
 
-    const where: any = {}
+    // Construire la requête Supabase
+    let query = supabaseAdmin
+      .from('Product')
+      .select(`
+        *,
+        category:Category(*),
+        orderItems:OrderItem(
+          *,
+          order:Order(*)
+        )
+      `)
 
-    if (category) {
-      where.category = { slug: category }
-    }
-
+    // Filtres
     if (status) {
-      where.status = status
+      query = query.eq('status', status)
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-      ]
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
     }
 
-    const products = await prisma.product.findMany({
-      where,
-      include: {
-        category: true,
-        _count: {
-          select: {
-            reviews: true,
-            orderItems: true,
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    })
+    // Limite
+    if (limit) {
+      query = query.limit(parseInt(limit))
+    }
+
+    // Exécuter la requête
+    const { data: products, error } = await query
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    // Si tri par popularité
+    if (sort === 'popular' && products) {
+      // Calculer les ventes pour chaque produit
+      const productsWithSales = products.map(product => {
+        const sales = product.orderItems?.filter((item: any) => 
+          item.order?.paymentStatus === 'PAID'
+        ).reduce((sum: number, item: any) => sum + (item.quantity || 0), 0) || 0
+        
+        return { ...product, totalSales: sales }
+      })
+
+      // Trier par nombre de ventes
+      productsWithSales.sort((a, b) => b.totalSales - a.totalSales)
+      
+      return NextResponse.json(productsWithSales)
+    }
 
     return NextResponse.json(products)
   } catch (error) {
@@ -61,22 +88,22 @@ export async function GET(req: NextRequest) {
 // POST create new product
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await req.json()
     
     // Generate slug from name
-    const slug = body.name
+    const slug = body.slug || body.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
 
-    const product = await prisma.product.create({
-      data: {
+    const { data: product, error } = await supabaseAdmin
+      .from('Product')
+      .insert({
         name: body.name,
         slug,
         description: body.description,
@@ -94,11 +121,19 @@ export async function POST(req: NextRequest) {
         status: body.status,
         featured: body.featured || false,
         categoryId: body.categoryId,
-      },
-      include: {
-        category: true,
-      }
-    })
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      .select(`
+        *,
+        category:Category(*)
+      `)
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
@@ -110,10 +145,9 @@ export async function POST(req: NextRequest) {
 // PUT update product
 export async function PUT(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -124,20 +158,30 @@ export async function PUT(req: NextRequest) {
     }
 
     // Generate new slug if name changed
-    if (data.name) {
+    if (data.name && !data.slug) {
       data.slug = data.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
     }
 
-    const product = await prisma.product.update({
-      where: { id },
-      data,
-      include: {
-        category: true,
-      }
-    })
+    // Ajouter la date de mise à jour
+    data.updatedAt = new Date().toISOString()
+
+    const { data: product, error } = await supabaseAdmin
+      .from('Product')
+      .update(data)
+      .eq('id', id)
+      .select(`
+        *,
+        category:Category(*)
+      `)
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
 
     return NextResponse.json(product)
   } catch (error) {
@@ -149,10 +193,9 @@ export async function PUT(req: NextRequest) {
 // DELETE product
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
@@ -162,9 +205,15 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Product ID is required' }, { status: 400 })
     }
 
-    await prisma.product.delete({
-      where: { id }
-    })
+    const { error } = await supabaseAdmin
+      .from('Product')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

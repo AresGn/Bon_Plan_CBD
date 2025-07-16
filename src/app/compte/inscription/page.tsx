@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
 import { 
   UserIcon,
   EnvelopeIcon,
@@ -22,7 +23,6 @@ interface FormData {
   firstName: string
   lastName: string
   email: string
-  phone: string
   password: string
   confirmPassword: string
   acceptTerms: boolean
@@ -39,7 +39,6 @@ export default function InscriptionPage() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
     password: '',
     confirmPassword: '',
     acceptTerms: false,
@@ -56,10 +55,6 @@ export default function InscriptionPage() {
     return re.test(email)
   }
 
-  const validatePhone = (phone: string) => {
-    const re = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-    return re.test(phone)
-  }
 
   const validatePassword = (password: string) => {
     return password.length >= 8
@@ -80,12 +75,6 @@ export default function InscriptionPage() {
       newErrors.email = 'L\'email est requis'
     } else if (!validateEmail(formData.email)) {
       newErrors.email = 'Email invalide'
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Le téléphone est requis'
-    } else if (!validatePhone(formData.phone)) {
-      newErrors.phone = 'Numéro de téléphone invalide'
     }
 
 
@@ -133,10 +122,49 @@ export default function InscriptionPage() {
     setIsLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Vérifier s'il y a déjà des utilisateurs dans la base
+      const { data: existingUsers, error: countError } = await supabase
+        .from('User')
+        .select('id', { count: 'exact', head: true })
       
-      toast.success('Inscription réussie ! Bienvenue chez Bon Plan CBD')
+      const isFirstUser = !existingUsers || existingUsers.length === 0
+      
+      // Vérifier si l'email existe déjà
+      const { data: existingUser } = await supabase
+        .from('User')
+        .select('id')
+        .eq('email', formData.email)
+        .single()
+
+      if (existingUser) {
+        throw new Error('Cette adresse email est déjà utilisée')
+      }
+
+      // Créer l'utilisateur dans notre table User avec un appel API
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: `${formData.firstName} ${formData.lastName}`,
+          role: isFirstUser ? 'ADMIN' : 'USER'
+        })
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || 'Erreur lors de l\'inscription')
+      }
+
+      if (isFirstUser) {
+        toast.success('Inscription réussie ! Vous êtes le premier utilisateur et avez été nommé administrateur.')
+      } else {
+        toast.success('Inscription réussie ! Bienvenue chez Bon Plan CBD')
+      }
+
       router.push('/compte')
     } catch (error) {
       toast.error('Une erreur est survenue. Veuillez réessayer.')
@@ -254,32 +282,6 @@ export default function InscriptionPage() {
                   </div>
                   {errors.email && (
                     <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                  )}
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 mb-1">
-                    Téléphone
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <PhoneIcon className="h-5 w-5 text-neutral-400" />
-                    </div>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className={`block w-full pl-10 pr-3 py-3 border ${
-                        errors.phone ? 'border-red-300' : 'border-neutral-300'
-                      } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500`}
-                      placeholder="06 12 34 56 78"
-                    />
-                  </div>
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
                   )}
                 </div>
 

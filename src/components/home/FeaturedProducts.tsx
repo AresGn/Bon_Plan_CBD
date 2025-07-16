@@ -7,6 +7,7 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import { ShoppingCartIcon, HeartIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
 import { useCartStore } from '@/hooks/useCartStore'
+import { useProducts } from '@/hooks/useProducts'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -15,72 +16,106 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-// Produits de démonstration - à remplacer par des données de la base
-const featuredProducts = [
+// Produits de démonstration pour fallback
+const demoProducts = [
   {
     id: '1',
-    name: 'Amnesia Haze',
+    name: 'OG Kush CBD',
     category: 'Fleurs CBD',
-    price: 8.90,
+    price: 9.90,
     originalPrice: 12.90,
-    image: '/images/img3.jpg',
-    cbdRate: 22,
-    thcRate: 0.2,
-    rating: 4.8,
-    reviews: 124,
-    badge: 'Best Seller',
-    description: 'Une variété légendaire aux arômes citronnés',
+    image: '/images/img8.jpg',
+    cbdRate: 18,
+    thcRate: 0.3,
+    rating: 4.9,
+    reviews: 145,
+    badge: 'Greenhouse',
+    description: 'Fleurs compactes aux arômes sour, notes crémeuses et rondes',
   },
   {
     id: '2',
-    name: 'Huile CBD 10%',
-    category: 'Huiles CBD',
-    price: 39.90,
-    originalPrice: 49.90,
-    image: '/images/huile.jpg',
-    cbdRate: 10,
-    thcRate: 0,
-    rating: 4.9,
-    reviews: 89,
-    badge: 'Full Spectrum',
-    description: 'Huile premium à spectre complet',
-  },
-  {
-    id: '3',
-    name: 'Super Skunk',
+    name: 'Small Bud Orange Bud',
     category: 'Fleurs CBD',
     price: 7.50,
     originalPrice: 9.90,
-    image: '/images/img8.jpg',
-    cbdRate: 18,
-    thcRate: 0.2,
+    image: '/images/img9.jpg',
+    cbdRate: 15,
+    thcRate: 0.3,
     rating: 4.7,
-    reviews: 67,
-    badge: 'Indoor',
-    description: 'Culture indoor de qualité supérieure',
+    reviews: 89,
+    badge: 'Fruité',
+    description: 'Goût fruité et notes d\'agrumes, idéal pour la relaxation',
+  },
+  {
+    id: '3',
+    name: 'Small Bud Amnesia',
+    category: 'Fleurs CBD',
+    price: 8.50,
+    originalPrice: 11.90,
+    image: '/images/img10.jpg',
+    cbdRate: 16,
+    thcRate: 0.3,
+    rating: 4.8,
+    reviews: 112,
+    badge: 'Aromatique',
+    description: 'Concentration exceptionnelle en arômes, relaxation profonde',
   },
   {
     id: '4',
-    name: 'Résine Marocaine',
-    category: 'Résines CBD',
-    price: 12.90,
-    originalPrice: 15.90,
-    image: '/images/img4.jpg',
-    cbdRate: 25,
-    thcRate: 0.2,
-    rating: 4.9,
-    reviews: 156,
-    badge: 'Premium',
-    description: 'Hash traditionnel de qualité exceptionnelle',
+    name: 'Super Skunk CBD',
+    category: 'Fleurs CBD',
+    price: 8.90,
+    originalPrice: 11.50,
+    image: '/images/img11.jpg',
+    cbdRate: 17,
+    thcRate: 0.3,
+    rating: 4.8,
+    reviews: 134,
+    badge: 'Outdoor',
+    description: 'Arômes amers et fruités, notes de bois et pin',
   },
-]
+  {
+    id: '5',
+    name: 'Blue Dream CBD',
+    category: 'Fleurs CBD',
+    price: 6.90,
+    originalPrice: 8.90,
+    image: '/images/img12.jpg',
+    cbdRate: 11,
+    thcRate: 0.3,
+    rating: 4.6,
+    reviews: 78,
+    badge: 'Citronné',
+    description: 'Notes citronnées avec des touches de pin et fruits doux',
+  },
+  {
+    id: '6',
+    name: 'Dutch Chocolate',
+    category: 'Fleurs CBD',
+    price: 10.90,
+    originalPrice: 13.90,
+    image: '/images/img13.jpg',
+    cbdRate: 19,
+    thcRate: 0.3,
+    rating: 4.9,
+    reviews: 167,
+    badge: 'Gourmand',
+    description: 'Parfum doux et gourmand rappelant le chocolat fin',
+  },
+];
 
 export default function FeaturedProducts() {
   const addItem = useCartStore((state) => state.addItem)
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
+  
+  // Récupérer les produits featured depuis la base de données
+  const { products, loading, error } = useProducts({ featured: true, status: 'ACTIVE' })
+  
+  // Utiliser les produits de la base ou les produits de démo
+  const displayProducts = products.length > 0 ? products : demoProducts
 
-  const handleAddToCart = async (product: typeof featuredProducts[0]) => {
+  const handleAddToCart = async (product: any) => {
     setLoadingProduct(product.id)
     
     // Simuler un délai d'ajout
@@ -90,8 +125,8 @@ export default function FeaturedProducts() {
         name: product.name,
         price: product.price,
         quantity: 1,
-        image: product.image,
-        category: product.category,
+        image: product.images?.[0] || product.image || '/images/placeholder.jpg',
+        category: product.category?.name || product.category || 'CBD',
         cbdRate: product.cbdRate,
         thcRate: product.thcRate,
       })
@@ -106,6 +141,31 @@ export default function FeaturedProducts() {
       prev.includes(productId) 
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
+    )
+  }
+
+  // Afficher un état de chargement
+  if (loading) {
+    return (
+      <section className="py-24 bg-gradient-to-b from-neutral-50 to-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-neutral-900">Chargement des produits...</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-neutral-200 rounded-3xl aspect-[4/5]"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-neutral-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-6 bg-neutral-200 rounded w-full mb-4"></div>
+                  <div className="h-4 bg-neutral-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     )
   }
 
@@ -152,7 +212,7 @@ export default function FeaturedProducts() {
             }}
             className="featured-products-swiper"
           >
-            {featuredProducts.map((product, index) => (
+            {displayProducts.map((product, index) => (
               <SwiperSlide key={product.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -164,28 +224,33 @@ export default function FeaturedProducts() {
                 >
                   {/* Image Container */}
                   <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
-                    <Link href={`/produits/${product.id}`}>
+                    <Link href={`/produits/${(product as any).slug || product.id}`}>
                       <Image
-                        src={product.image}
+                        src={(product as any).images?.[0] || (product as any).image || '/images/placeholder.jpg'}
                         alt={product.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        loading="lazy"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        quality={85}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                       />
                     </Link>
                     
                     {/* Badges */}
                     <div className="absolute top-4 left-4 flex flex-col gap-2">
-                      {product.badge && (
+                      {((product as any).badge || (product as any).cultivationType) && (
                         <motion.span
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ delay: 0.3 }}
                           className="bg-gradient-to-r from-primary-600 to-primary-700 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
                         >
-                          {product.badge}
+                          {(product as any).badge || (product as any).cultivationType}
                         </motion.span>
                       )}
-                      {product.originalPrice > product.price && (
+                      {product.originalPrice && product.originalPrice > product.price && (
                         <motion.span
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
@@ -230,10 +295,10 @@ export default function FeaturedProducts() {
                   {/* Content */}
                   <div className="p-6">
                     <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider">
-                      {product.category}
+                      {(product as any).category?.name || (product as any).category || 'CBD'}
                     </p>
                     
-                    <Link href={`/produits/${product.id}`}>
+                    <Link href={`/produits/${(product as any).slug || product.id}`}>
                       <h3 className="mt-2 text-xl font-bold text-neutral-900 group-hover:text-primary-600 transition-colors">
                         {product.name}
                       </h3>
@@ -244,23 +309,25 @@ export default function FeaturedProducts() {
                     </p>
 
                     {/* Rating */}
-                    <div className="mt-4 flex items-center gap-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <StarIcon
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < Math.floor(product.rating)
-                                ? 'text-yellow-400'
-                                : 'text-neutral-200'
-                            }`}
-                          />
-                        ))}
+                    {((product as any).rating || (product as any).reviews?.length > 0) && (
+                      <div className="mt-4 flex items-center gap-2">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <StarIcon
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < Math.floor((product as any).rating || 4.5)
+                                  ? 'text-yellow-400'
+                                  : 'text-neutral-200'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-neutral-600">
+                          {(product as any).rating || 4.5} ({(product as any).reviews?.length || 0} avis)
+                        </span>
                       </div>
-                      <span className="text-sm text-neutral-600">
-                        {product.rating} ({product.reviews} avis)
-                      </span>
-                    </div>
+                    )}
 
                     {/* Price and Action */}
                     <div className="mt-6 flex items-center justify-between">
@@ -268,7 +335,7 @@ export default function FeaturedProducts() {
                         <span className="text-3xl font-bold text-neutral-900">
                           {product.price.toFixed(2)}€
                         </span>
-                        {product.originalPrice > product.price && (
+                        {product.originalPrice && product.originalPrice > product.price && (
                           <span className="ml-2 text-sm text-neutral-500 line-through">
                             {product.originalPrice.toFixed(2)}€
                           </span>

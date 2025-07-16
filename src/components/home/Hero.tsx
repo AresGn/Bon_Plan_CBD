@@ -219,7 +219,7 @@ export default function Hero() {
                   <div className="p-8">
                     <div className="relative h-[400px] rounded-2xl overflow-hidden">
                       <Image
-                        src="/images/hero.jpg"
+                        src="/images/img14.jpg"
                         alt="Produits CBD Premium"
                         fill
                         className="object-cover"

@@ -189,3 +189,38 @@ Si vous rencontrez des problèmes :
 1. Consultez les logs : `npm run dev`
 2. Vérifiez Prisma Studio : `npx prisma studio`
 3. Consultez la documentation Prisma : [prisma.io/docs](https://www.prisma.io/docs)
+
+---
+
+## 🚀 Connexion automatique à Supabase
+
+### Script pour générer le fichier `.env.local` avec la bonne URL
+
+Crée un fichier `setup_supabase_env.sh` à la racine du projet avec ce contenu :
+
+```bash
+#!/bin/bash
+
+echo "DATABASE_URL=\"postgresql://postgres:11Silvere@@db.dupbzoolphysyeykondk.supabase.co:5432/postgres\"" > .env.local
+echo "Fichier .env.local généré avec la connexion Supabase."
+```
+
+Puis rends-le exécutable et lance-le :
+
+```bash
+chmod +x setup_supabase_env.sh
+./setup_supabase_env.sh
+```
+
+---
+
+Tu peux ensuite lancer les migrations Prisma normalement :
+
+```bash
+npx prisma generate
+npx prisma migrate deploy
+```
+
+---
+
+**Ce script écrase l'ancien .env.local ! Ajoute les autres variables d'environnement si besoin (NextAuth, Stripe, etc).**

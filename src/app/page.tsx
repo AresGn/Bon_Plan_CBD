@@ -1,15 +1,15 @@
 import Hero from '@/components/home/Hero'
-import FeaturedProducts from '@/components/home/FeaturedProducts'
 import Categories from '@/components/home/Categories'
-import WhyChooseUs from '@/components/home/WhyChooseUs'
-import Testimonials from '@/components/home/Testimonials'
-import StoreInfo from '@/components/home/StoreInfo'
+import { FeaturedProducts, WhyChooseUs, Testimonials, StoreInfo } from '@/components/home/LazyComponents'
 
 export default function HomePage() {
   return (
     <>
+      {/* Composants critiques - chargés immédiatement */}
       <Hero />
       <Categories />
+      
+      {/* Composants secondaires - chargés en lazy loading */}
       <FeaturedProducts />
       <WhyChooseUs />
       <Testimonials />

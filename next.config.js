@@ -1,16 +1,27 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'bon-plan-cbd.fr'], // Ajouter vos domaines d'images
+    domains: ['localhost', 'bon-plan-cbd.fr'],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 31536000,
+    deviceSizes: [640, 750, 1080, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
-  env: {
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
-    DATABASE_URL: process.env.DATABASE_URL || '',
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL || '',
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  experimental: {
+    optimizePackageImports: ['@heroicons/react', 'framer-motion', 'swiper'],
+  },
+  // Configuration webpack simplifiée pour éviter les erreurs
+  webpack: (config) => {
+    return config
   },
 }
 
-module.exports = nextConfig
+module.exports = withBundleAnalyzer(nextConfig)

@@ -6,74 +6,127 @@ import Link from 'next/link'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { ShoppingCartIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
 import { useCartStore } from '@/hooks/useCartStore'
+import { useProducts } from '@/hooks/useProducts'
 import toast from 'react-hot-toast'
 
+// Type pour les produits mock simplifiés
+interface SimplifiedProduct {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  image: string;
+  cbdRate: number;
+  thcRate: number;
+  rating: number;
+  reviews: number;
+  cultivationType?: string;
+  description: string;
+  inStock: boolean;
+}
+
 // Données de démonstration - à remplacer par des appels API
-const mockProducts = [
+const mockProducts: SimplifiedProduct[] = [
   {
     id: '1',
-    name: 'Amnesia Haze',
-    slug: 'amnesia-haze',
+    name: 'OG Kush CBD',
+    slug: 'og-kush-cbd',
     category: 'fleurs',
-    price: 8.90,
+    price: 9.90,
     originalPrice: 12.90,
-    image: '/images/products/amnesia-haze.jpg',
-    cbdRate: 22,
-    thcRate: 0.2,
-    rating: 4.8,
-    reviews: 124,
-    cultivationType: 'Indoor',
-    description: 'Une variété légendaire aux arômes citronnés',
+    image: '/images/img8.jpg',
+    cbdRate: 18,
+    thcRate: 0.3,
+    rating: 4.9,
+    reviews: 145,
+    cultivationType: 'Greenhouse',
+    description: 'Fleurs compactes aux arômes sour, notes crémeuses et rondes',
     inStock: true,
   },
   {
     id: '2',
-    name: 'Super Skunk',
-    slug: 'super-skunk',
+    name: 'Small Bud Orange Bud',
+    slug: 'small-bud-orange-bud',
     category: 'fleurs',
     price: 7.50,
     originalPrice: 9.90,
-    image: '/images/products/super-skunk.jpg',
-    cbdRate: 18,
-    thcRate: 0.2,
+    image: '/images/img9.jpg',
+    cbdRate: 15,
+    thcRate: 0.3,
     rating: 4.7,
-    reviews: 67,
+    reviews: 89,
     cultivationType: 'Greenhouse',
-    description: 'Fleur CBD relaxante aux notes terreuses',
+    description: 'Goût fruité et notes d\'agrumes, idéal pour la relaxation',
     inStock: true,
   },
   {
     id: '3',
-    name: 'Huile CBD 10%',
-    slug: 'huile-cbd-10',
-    category: 'huiles',
-    price: 39.90,
-    originalPrice: 49.90,
-    image: '/images/products/huile-10.jpg',
-    cbdRate: 10,
-    thcRate: 0,
-    rating: 4.9,
-    reviews: 89,
-    description: 'Huile premium à spectre complet',
+    name: 'Small Bud Amnesia',
+    slug: 'small-bud-amnesia',
+    category: 'fleurs',
+    price: 8.50,
+    originalPrice: 11.90,
+    image: '/images/img10.jpg',
+    cbdRate: 16,
+    thcRate: 0.3,
+    rating: 4.8,
+    reviews: 112,
+    cultivationType: 'Indoor',
+    description: 'Concentration exceptionnelle en arômes, relaxation profonde',
     inStock: true,
   },
   {
     id: '4',
-    name: 'Huile CBD 20%',
-    slug: 'huile-cbd-20',
-    category: 'huiles',
-    price: 69.90,
-    originalPrice: 89.90,
-    image: '/images/products/huile-20.jpg',
-    cbdRate: 20,
-    thcRate: 0,
-    rating: 4.9,
-    reviews: 156,
-    description: 'Huile forte concentration pour effets renforcés',
+    name: 'Super Skunk CBD',
+    slug: 'super-skunk-cbd',
+    category: 'fleurs',
+    price: 8.90,
+    originalPrice: 11.50,
+    image: '/images/img11.jpg',
+    cbdRate: 17,
+    thcRate: 0.3,
+    rating: 4.8,
+    reviews: 134,
+    cultivationType: 'Outdoor',
+    description: 'Arômes amers et fruités, notes de bois et pin',
     inStock: true,
   },
   {
     id: '5',
+    name: 'Blue Dream CBD',
+    slug: 'blue-dream-cbd',
+    category: 'fleurs',
+    price: 6.90,
+    originalPrice: 8.90,
+    image: '/images/img12.jpg',
+    cbdRate: 11,
+    thcRate: 0.3,
+    rating: 4.6,
+    reviews: 78,
+    cultivationType: 'Greenhouse',
+    description: 'Notes citronnées avec des touches de pin et fruits doux',
+    inStock: true,
+  },
+  {
+    id: '6',
+    name: 'Dutch Chocolate',
+    slug: 'dutch-chocolate',
+    category: 'fleurs',
+    price: 10.90,
+    originalPrice: 13.90,
+    image: '/images/img13.jpg',
+    cbdRate: 19,
+    thcRate: 0.3,
+    rating: 4.9,
+    reviews: 167,
+    cultivationType: 'Outdoor',
+    description: 'Parfum doux et gourmand rappelant le chocolat fin',
+    inStock: true,
+  },
+  {
+    id: '7',
     name: 'Résine Marocaine',
     slug: 'resine-marocaine',
     category: 'resines',
@@ -94,10 +147,6 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
     title: 'Fleurs CBD Premium',
     description: 'Découvrez notre sélection de fleurs CBD cultivées avec soin, riches en cannabidiol et aux arômes exceptionnels.',
   },
-  huiles: {
-    title: 'Huiles CBD de Qualité',
-    description: 'Nos huiles CBD à spectre complet ou broad spectrum pour un bien-être optimal au quotidien.',
-  },
   resines: {
     title: 'Résines & Hash CBD',
     description: 'Des résines CBD premium aux taux élevés de cannabidiol pour une expérience intense.',
@@ -108,7 +157,7 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
   },
   cosmetiques: {
     title: 'Cosmétiques au CBD',
-    description: 'Crèmes, baumes et huiles de massage enrichis en CBD pour prendre soin de votre peau.',
+    description: 'Crèmes, baumes et soins de massage enrichis en CBD pour prendre soin de votre peau.',
   },
   accessoires: {
     title: 'Accessoires CBD',
@@ -122,9 +171,30 @@ export default function ProductList({ categorySlug }: { categorySlug: string }) 
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [showFilters, setShowFilters] = useState(false)
   const addItem = useCartStore((state) => state.addItem)
-
-  // Filtrer les produits par catégorie
-  let filteredProducts = mockProducts.filter(product => product.category === categorySlug)
+  
+  // Récupérer les produits depuis l'API
+  const { products, loading, error } = useProducts({ category: categorySlug, status: 'ACTIVE' })
+  
+  // Convertir les produits de l'API en produits simplifiés pour l'affichage
+  const simplifiedProducts: SimplifiedProduct[] = products.map(p => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    category: p.category.slug,
+    price: p.price,
+    originalPrice: p.originalPrice || p.price,
+    image: p.images?.[0] || '/images/default-product.jpg',
+    cbdRate: p.cbdRate,
+    thcRate: p.thcRate,
+    rating: 4.5, // Valeur par défaut car pas de reviews pour l'instant
+    reviews: 0,
+    cultivationType: p.cultivationType,
+    description: p.description,
+    inStock: p.stock > 0,
+  }))
+  
+  // Utiliser les produits de l'API ou les produits de démo si aucun produit n'est trouvé
+  let filteredProducts = simplifiedProducts.length > 0 ? simplifiedProducts : mockProducts.filter(product => product.category === categorySlug)
 
   // Trier les produits
   filteredProducts = [...filteredProducts].sort((a, b) => {
@@ -141,7 +211,7 @@ export default function ProductList({ categorySlug }: { categorySlug: string }) 
     }
   })
 
-  const handleAddToCart = (product: typeof mockProducts[0]) => {
+  const handleAddToCart = (product: SimplifiedProduct) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -156,6 +226,43 @@ export default function ProductList({ categorySlug }: { categorySlug: string }) 
   }
 
   const info = categoryInfo[categorySlug] || { title: 'Produits CBD', description: '' }
+
+  // Afficher un état de chargement
+  if (loading) {
+    return (
+      <div className="bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-neutral-900">Chargement des produits...</h2>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-neutral-200 rounded-lg aspect-square"></div>
+                  <div className="p-4">
+                    <div className="h-4 bg-neutral-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-neutral-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Afficher une erreur si nécessaire
+  if (error) {
+    return (
+      <div className="bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="text-red-600">Erreur lors du chargement des produits</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { StarIcon } from '@heroicons/react/20/solid'
@@ -48,8 +48,9 @@ const mockProduct = {
 export default function ProductDetailPage({ 
   params 
 }: { 
-  params: { category: string; slug: string } 
+  params: Promise<{ category: string; slug: string }> 
 }) {
+  const resolvedParams = use(params);
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [showDescription, setShowDescription] = useState(true)
@@ -87,10 +88,10 @@ export default function ProductDetailPage({
           </Link>
           <span className="text-neutral-400">/</span>
           <Link 
-            href={`/produits/${params.category}`} 
+            href={`/produits/${resolvedParams.category}`} 
             className="text-neutral-500 hover:text-neutral-700 capitalize"
           >
-            {params.category}
+            {resolvedParams.category}
           </Link>
           <span className="text-neutral-400">/</span>
           <span className="text-neutral-900">{mockProduct.name}</span>

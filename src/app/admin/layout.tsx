@@ -26,9 +26,6 @@ const navigation = [
   { name: 'Produits', href: '/admin/products', icon: ShoppingBagIcon },
   { name: 'Catégories', href: '/admin/categories', icon: TagIcon },
   { name: 'Commandes', href: '/admin/orders', icon: ShoppingCartIcon },
-  { name: 'Clients', href: '/admin/customers', icon: UsersIcon },
-  { name: 'Statistiques', href: '/admin/analytics', icon: ChartBarIcon },
-  { name: 'Avis', href: '/admin/reviews', icon: ChatBubbleLeftRightIcon },
   { name: 'Paramètres', href: '/admin/settings', icon: CogIcon },
 ]
 

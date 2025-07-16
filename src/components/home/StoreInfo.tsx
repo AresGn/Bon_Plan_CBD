@@ -86,10 +86,6 @@ export default function StoreInfo() {
 
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="card p-4 text-center">
-                <div className="text-2xl font-bold text-primary-600">2 ans</div>
-                <p className="text-sm text-neutral-600">D'expérience</p>
-              </div>
-              <div className="card p-4 text-center">
                 <div className="text-2xl font-bold text-primary-600">100%</div>
                 <p className="text-sm text-neutral-600">Clients satisfaits</p>
               </div>

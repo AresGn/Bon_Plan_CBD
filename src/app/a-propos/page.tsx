@@ -132,17 +132,10 @@ export default function AboutPage() {
             
             <div className="mt-8 flex flex-wrap gap-8">
               <div>
-                <div className="text-4xl font-bold text-primary-600">5+</div>
-                <div className="text-sm text-neutral-600">Années d'expérience</div>
-              </div>
-              <div>
                 <div className="text-4xl font-bold text-primary-600">10k+</div>
                 <div className="text-sm text-neutral-600">Clients satisfaits</div>
               </div>
-              <div>
-                <div className="text-4xl font-bold text-primary-600">4</div>
-                <div className="text-sm text-neutral-600">Boutiques physiques</div>
-              </div>
+              
             </div>
           </motion.div>
           
@@ -155,7 +148,7 @@ export default function AboutPage() {
           >
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/about/store.jpg"
+                src="/images/hero.jpg"
                 alt="Notre boutique"
                 fill
                 className="object-cover"
@@ -203,45 +196,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Timeline Section */}
-      <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl font-bold text-neutral-900 mb-4">Notre Parcours</h2>
-          <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-            Les étapes clés de notre développement
-          </p>
-        </motion.div>
-        
-        <div className="relative">
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-neutral-200" />
-          
-          {milestones.map((milestone, index) => (
-            <motion.div
-              key={milestone.year}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`relative flex items-center ${
-                index % 2 === 0 ? 'justify-start' : 'justify-end'
-              } mb-8`}
-            >
-              <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8'}`}>
-                <div className="bg-white p-6 rounded-2xl shadow-lg">
-                  <div className="text-2xl font-bold text-primary-600 mb-2">{milestone.year}</div>
-                  <p className="text-neutral-700">{milestone.event}</p>
-                </div>
-              </div>
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary-600 rounded-full border-4 border-white shadow-lg" />
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      
 
       {/* Team Section */}
       <div className="bg-gradient-to-b from-neutral-50 to-white">

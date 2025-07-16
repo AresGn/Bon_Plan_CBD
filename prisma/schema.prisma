@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file for PostgreSQL (production)
+// For development with SQLite, use a different schema if nécessaire
 
 generator client {
   provider = "prisma-client-js"
@@ -16,7 +16,7 @@ model User {
   email          String    @unique
   password       String
   name           String?
-  role           Role      @default(USER)
+  role           String    @default("USER") // Changed from enum to String for SQLite
   emailVerified  DateTime?
   image          String?
   createdAt      DateTime  @default(now())
@@ -26,11 +26,6 @@ model User {
   reviews        Review[]
   addresses      Address[]
   favorites      Favorite[]
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 // Product category
@@ -55,15 +50,15 @@ model Product {
   price        Float
   originalPrice Float?
   stock        Int       @default(0)
-  images       String[]
+  images       String    // Changed from String[] to String (JSON stringified)
   cbdRate      Float
   thcRate      Float
   origin       String?
   cultivationType String?
-  terpenes     String[]
-  effects      String[]
+  terpenes     String    // Changed from String[] to String (JSON stringified)
+  effects      String    // Changed from String[] to String (JSON stringified)
   labAnalysis  String?
-  status       ProductStatus @default(DRAFT)
+  status       String    @default("DRAFT") // Changed from enum to String
   featured     Boolean   @default(false)
   
   categoryId   String
@@ -77,17 +72,11 @@ model Product {
   favorites    Favorite[]
 }
 
-enum ProductStatus {
-  ACTIVE
-  INACTIVE
-  DRAFT
-}
-
 // Order model
 model Order {
   id              String      @id @default(cuid())
   orderNumber     String      @unique
-  status          OrderStatus @default(PENDING)
+  status          String      @default("PENDING") // Changed from enum to String
   total           Float
   subtotal        Float
   shipping        Float       @default(0)
@@ -100,11 +89,11 @@ model Order {
   email           String
   phone           String
   
-  shippingAddress Json
-  billingAddress  Json?
+  shippingAddress String      // Changed from Json to String (JSON stringified)
+  billingAddress  String?     // Changed from Json to String (JSON stringified)
   
   paymentMethod   String
-  paymentStatus   PaymentStatus @default(PENDING)
+  paymentStatus   String      @default("PENDING") // Changed from enum to String
   paymentId       String?
   
   notes           String?
@@ -113,21 +102,6 @@ model Order {
   updatedAt       DateTime    @updatedAt
   
   items           OrderItem[]
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
-
-enum PaymentStatus {
-  PENDING
-  PAID
-  FAILED
-  REFUNDED
 }
 
 // Order items
@@ -203,7 +177,7 @@ model Favorite {
 model Setting {
   id    String @id @default(cuid())
   key   String @unique
-  value Json
+  value String // Changed from Json to String (JSON stringified)
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -4,7 +4,6 @@ import Image from 'next/image'
 const footerLinks = {
   produits: [
     { name: 'Fleurs CBD', href: '/produits/fleurs' },
-    { name: 'Huiles CBD', href: '/produits/huiles' },
     { name: 'Résines CBD', href: '/produits/resines' },
     { name: 'Infusions CBD', href: '/produits/infusions' },
     { name: 'Cosmétiques CBD', href: '/produits/cosmetiques' },

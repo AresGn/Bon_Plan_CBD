@@ -14,10 +14,9 @@ const navigation = [
     href: '#',
     dropdown: [
       { name: 'Fleurs CBD', href: '/produits/fleurs', icon: '🌿' },
-      { name: 'Huiles CBD', href: '/produits/huiles', icon: '💧' },
       { name: 'Résines CBD', href: '/produits/resines', icon: '🟫' },
       { name: 'Infusions CBD', href: '/produits/infusions', icon: '☕' },
-      { name: 'Cosmétiques CBD', href: '/produits/cosmetiques', icon: '🧴' },
+      { name: 'Cosmétiques CBD', href: '/produits/cosmetiques', icon: '🧼' },
       { name: 'Vaporisateurs', href: '/produits/vaporisateurs', icon: '💨' },
     ]
   },

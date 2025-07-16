@@ -1,17 +1,17 @@
 import ProductList from '@/components/products/ProductList'
 import { Metadata } from 'next'
 
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
   const categoryTitles: Record<string, string> = {
     'fleurs': 'Fleurs CBD',
-    'huiles': 'Huiles CBD',
     'resines': 'Résines CBD',
     'infusions': 'Infusions CBD',
     'cosmetiques': 'Cosmétiques CBD',
     'accessoires': 'Accessoires CBD'
   }
 
-  const title = categoryTitles[params.category] || 'Produits CBD'
+  const title = categoryTitles[resolvedParams.category] || 'Produits CBD'
 
   return {
     title: `${title} - Bon Plan CBD Rouen`,
@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: { params: { category: string 
   }
 }
 
-export default function ProductCategory({ params }: { params: { category: string } }) {
-  return <ProductList categorySlug={params.category} />
+export default async function ProductCategory({ params }: { params: Promise<{ category: string }> }) {
+  const resolvedParams = await params;
+  return <ProductList categorySlug={resolvedParams.category} />
 }

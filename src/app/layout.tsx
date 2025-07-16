@@ -8,18 +8,22 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+  preload: true,
 })
 
 const poppins = Poppins({ 
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '600', '700'], // Réduit de 5 à 3 poids
   subsets: ['latin'],
   variable: '--font-poppins',
+  display: 'swap',
+  preload: true,
 })
 
 export const metadata: Metadata = {
   title: 'Bon Plan CBD - La Qualité au Meilleur Prix | Rouen',
-  description: 'Découvrez notre sélection premium de produits CBD : fleurs, huiles, résines, infusions. Magasin à Rouen avec analyses laboratoire et conseils personnalisés.',
-  keywords: 'CBD, Rouen, fleurs CBD, huile CBD, résine CBD, infusion CBD, cannabidiol, boutique CBD',
+  description: 'Découvrez notre sélection premium de produits CBD : fleurs, résines, infusions. Magasin à Rouen avec analyses laboratoire et conseils personnalisés.',
+  keywords: 'CBD, Rouen, fleurs CBD, résine CBD, infusion CBD, cannabidiol, boutique CBD',
   openGraph: {
     title: 'Bon Plan CBD - La Qualité au Meilleur Prix',
     description: 'Votre boutique CBD de confiance à Rouen',
