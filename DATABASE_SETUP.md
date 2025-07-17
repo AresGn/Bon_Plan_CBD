@@ -201,9 +201,6 @@ Crée un fichier `setup_supabase_env.sh` à la racine du projet avec ce contenu 
 ```bash
 #!/bin/bash
 
-echo "DATABASE_URL=\"postgresql://postgres:11Silvere@@db.dupbzoolphysyeykondk.supabase.co:5432/postgres\"" > .env.local
-echo "Fichier .env.local généré avec la connexion Supabase."
-```
 
 Puis rends-le exécutable et lance-le :
 
