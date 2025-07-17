@@ -201,7 +201,6 @@ Crée un fichier `setup_supabase_env.sh` à la racine du projet avec ce contenu 
 ```bash
 #!/bin/bash
 
-
 Puis rends-le exécutable et lance-le :
 
 ```bash
