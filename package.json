@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
-    "build:prod": "next build && next-sitemap"
+    "build:prod": "next build && next-sitemap",
+    "vercel-build": "next build"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
