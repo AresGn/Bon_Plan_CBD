@@ -79,17 +79,17 @@ export default function ContactPage() {
               <div className="flex flex-col items-center">
                 <PhoneIcon className="w-10 h-10 text-primary-600 mb-4" />
                 <h3 className="text-lg font-medium text-neutral-900">Appelez-nous</h3>
-                <p className="text-neutral-600 mt-2">02 35 89 45 67</p>
+                <p className="text-neutral-600 mt-2">07 88 64 69 83</p>
               </div>
               <div className="flex flex-col items-center">
                 <EnvelopeIcon className="w-10 h-10 text-primary-600 mb-4" />
                 <h3 className="text-lg font-medium text-neutral-900">Email</h3>
-                <p className="text-neutral-600 mt-2">contact@bonplancbd.fr</p>
+                <p className="text-neutral-600 mt-2">Bonplanpro76@gmail.com</p>
               </div>
               <div className="flex flex-col items-center">
                 <MapPinIcon className="w-10 h-10 text-primary-600 mb-4" />
                 <h3 className="text-lg font-medium text-neutral-900">Adresse</h3>
-                <p className="text-neutral-600 mt-2">123 Rue du Commerce, 76000 Rouen</p>
+                <p className="text-neutral-600 mt-2">7 Rue Saint-Gervais, 76000 Rouen</p>
               </div>
               <div className="flex flex-col items-center">
                 <ChatBubbleBottomCenterTextIcon className="w-10 h-10 text-primary-600 mb-4" />

@@ -155,10 +155,7 @@ const categoryInfo: Record<string, { title: string; description: string }> = {
     title: 'Infusions CBD Relaxantes',
     description: 'Tisanes et infusions au CBD pour des moments de détente et de bien-être.',
   },
-  cosmetiques: {
-    title: 'Cosmétiques au CBD',
-    description: 'Crèmes, baumes et soins de massage enrichis en CBD pour prendre soin de votre peau.',
-  },
+
   accessoires: {
     title: 'Accessoires CBD',
     description: 'Tout le nécessaire pour profiter pleinement de vos produits CBD.',

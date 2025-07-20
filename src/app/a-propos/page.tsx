@@ -15,55 +15,48 @@ import {
 
 const values = [
   {
-    icon: HeartIcon,
-    title: 'Passion du CBD',
-    description: 'Nous sommes passionnés par les bienfaits du CBD et souhaitons partager cette passion avec vous.'
-  },
-  {
     icon: ShieldCheckIcon,
     title: 'Qualité Premium',
-    description: 'Nous sélectionnons uniquement les meilleurs produits, testés en laboratoire et conformes aux normes.'
+    description: 'Nous sélectionnons avec soin les produits à base de cannabinoïdes que nous vous proposons, en nous assurant de leur qualité, tant au niveau des matières premières utilisées que des processus de fabrication.'
   },
   {
     icon: BeakerIcon,
-    title: 'Naturel & Bio',
-    description: 'Nos produits sont issus de cultures biologiques, sans pesticides ni produits chimiques.'
+    title: 'Testé en Laboratoire',
+    description: 'Tous nos produits possèdent un taux de THC inférieur au taux légal maximal (0,3%) et sont testés en laboratoire pour garantir leur conformité.'
+  },
+  {
+    icon: HeartIcon,
+    title: 'Bien-être Naturel',
+    description: 'Le CBD peut notamment être très efficace pour contribuer à lutter contre l\'anxiété, le stress, les douleurs chroniques ou encore les problèmes de sommeil.'
   },
   {
     icon: TruckIcon,
-    title: 'Livraison Rapide',
-    description: 'Commande expédiée sous 24h, livraison gratuite dès 50€ d\'achat.'
+    title: 'Service Client',
+    description: 'Notre service client se tient à votre disposition pour vous apporter une réponse adaptée et personnalisée.'
   }
 ]
 
-const teamMembers = [
+const benefits = [
   {
-    name: 'Marie Dupont',
-    role: 'Fondatrice & CEO',
-    image: '/images/team/marie.jpg',
-    description: 'Passionnée par le bien-être naturel depuis 10 ans.'
+    icon: HeartIcon,
+    title: 'Anxiété et Stress',
+    description: 'Le CBD peut aider à apaiser le stress, calmer l\'anxiété et favoriser un meilleur sommeil.'
   },
   {
-    name: 'Thomas Martin',
-    role: 'Responsable Qualité',
-    image: '/images/team/thomas.jpg',
-    description: 'Expert en contrôle qualité des produits CBD.'
+    icon: ShieldCheckIcon,
+    title: 'Douleurs Chroniques',
+    description: 'Certaines personnes s\'en servent pour soulager des douleurs chroniques ou inflammatoires.'
   },
   {
-    name: 'Sophie Bernard',
-    role: 'Conseillère Client',
-    image: '/images/team/sophie.jpg',
-    description: 'À votre écoute pour vous guider dans vos choix.'
+    icon: BeakerIcon,
+    title: 'Troubles du Sommeil',
+    description: 'Le CBD pourrait aider à améliorer la qualité du sommeil et lutter contre l\'insomnie.'
+  },
+  {
+    icon: CheckCircleIcon,
+    title: 'Bien-être Général',
+    description: 'Utilisé pour l\'amélioration du bien-être général et la relaxation au quotidien.'
   }
-]
-
-const milestones = [
-  { year: '2020', event: 'Création de Bon Plan CBD' },
-  { year: '2021', event: 'Ouverture de notre première boutique à Rouen' },
-  { year: '2022', event: 'Lancement de notre gamme exclusive' },
-  { year: '2023', event: 'Plus de 10 000 clients satisfaits' },
-  { year: '2024', event: 'Expansion nationale avec 3 nouvelles boutiques' },
-  { year: '2025', event: 'Leader du CBD en Normandie' }
 ]
 
 export default function AboutPage() {
@@ -89,17 +82,17 @@ export default function AboutPage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full mb-6 shadow-lg">
               <SparklesIcon className="w-5 h-5 text-primary-600" />
-              <span className="text-sm font-semibold text-primary-700">Depuis 2020</span>
+              <span className="text-sm font-semibold text-primary-700">CBD de Qualité</span>
             </div>
-            
+
             <h1 className="text-5xl sm:text-6xl font-bold tracking-tight">
               <span className="block text-neutral-900">À propos de</span>
-              <span className="block text-gradient mt-2">Bon Plan CBD</span>
+              <span className="block text-gradient mt-2">Bon Plan Pro 76</span>
             </h1>
-            
+
             <p className="mt-6 text-xl text-neutral-700 max-w-3xl mx-auto">
-              Votre boutique de confiance pour des produits CBD de qualité premium. 
-              Nous sommes passionnés par le bien-être naturel et engagés à vous offrir le meilleur du CBD.
+              Votre boutique CBD de confiance à Rouen. Nous vous proposons les meilleurs produits à base de cannabis légal,
+              livrés rapidement et discrètement.
             </p>
           </motion.div>
         </div>
@@ -114,28 +107,20 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold text-neutral-900 mb-6">Notre Histoire</h2>
+            <h2 className="text-3xl font-bold text-neutral-900 mb-6">Le CBD, qu'est-ce que c'est ?</h2>
             <div className="space-y-4 text-neutral-600">
               <p>
-                Bon Plan CBD est né d'une passion commune pour le bien-être naturel et les bienfaits du chanvre. 
-                Fondée en 2020 à Rouen, notre entreprise s'est rapidement imposée comme une référence dans le domaine du CBD en Normandie.
+                Abréviation du cannabidiol et membre de la famille des cannabinoïdes, <strong>le CBD est un principe actif extrait du plant de chanvre</strong>.
+                Contrairement au THC, molécule également présente dans la plante de cannabis, le CBD ne crée pas d'effet psychotrope, de dépendance, ni d'accoutumance et ses effets indésirables sont très rares.
               </p>
               <p>
-                Notre mission est simple : démocratiser l'accès à des produits CBD de qualité exceptionnelle, 
-                tout en offrant des conseils personnalisés et un service client irréprochable.
+                Utilisé en Chine depuis plus de 6000 ans pour son potentiel thérapeutique, <strong>le CBD est de plus en plus recommandé pour ses nombreux effets et bienfaits généraux sur la santé.</strong>
+                Il peut notamment être très efficace pour contribuer à lutter contre l'anxiété, le stress, les douleurs chroniques ou encore les problèmes de sommeil et l'insomnie.
               </p>
               <p>
-                Aujourd'hui, avec plusieurs boutiques physiques et notre site e-commerce, nous servons des milliers 
-                de clients satisfaits qui nous font confiance pour leur bien-être quotidien.
+                Bon Plan Pro 76 est une boutique qui vous propose <strong>les meilleurs produits à base de cannabis légal, livré chez vous rapidement et discrètement</strong>.
+                Vous trouverez le CBD sous différentes formes et avec des concentrations variées afin d'améliorer votre bien-être et votre qualité de vie au quotidien.
               </p>
-            </div>
-            
-            <div className="mt-8 flex flex-wrap gap-8">
-              <div>
-                <div className="text-4xl font-bold text-primary-600">10k+</div>
-                <div className="text-sm text-neutral-600">Clients satisfaits</div>
-              </div>
-              
             </div>
           </motion.div>
           
@@ -169,9 +154,9 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Nos Valeurs</h2>
+            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Pourquoi choisir Bon Plan Pro 76 ?</h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Ce qui nous guide au quotidien dans notre mission de vous offrir le meilleur du CBD
+              Nous avons sélectionné les meilleurs produits à base de chanvre afin de vous proposer, en toute légalité, une expérience optimale et une amélioration de votre bien-être au quotidien
             </p>
           </motion.div>
           
@@ -198,7 +183,7 @@ export default function AboutPage() {
 
       
 
-      {/* Team Section */}
+      {/* Benefits Section */}
       <div className="bg-gradient-to-b from-neutral-50 to-white">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <motion.div
@@ -207,36 +192,27 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Notre Équipe</h2>
+            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Quels sont les bienfaits du CBD ?</h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Des experts passionnés à votre service
+              Le CBD pourrait aider dans de nombreux domaines du bien-être quotidien
             </p>
           </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {benefits.map((benefit, index) => (
               <motion.div
-                key={member.name}
+                key={benefit.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center"
+                className="text-center group"
               >
-                <div className="relative w-48 h-48 mx-auto mb-6">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-full blur-xl opacity-20" />
-                  <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-xl">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                <div className="mx-auto w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+                  <benefit.icon className="w-8 h-8 text-primary-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-neutral-900">{member.name}</h3>
-                <p className="text-primary-600 font-medium mb-2">{member.role}</p>
-                <p className="text-neutral-600">{member.description}</p>
+                <h3 className="mt-4 text-xl font-semibold text-neutral-900">{benefit.title}</h3>
+                <p className="mt-2 text-neutral-600">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
@@ -252,22 +228,22 @@ export default function AboutPage() {
           className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-3xl p-12 text-white text-center"
         >
           <ShieldCheckIcon className="w-16 h-16 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold mb-6">Nos Certifications & Garanties</h2>
+          <h2 className="text-3xl font-bold mb-6">Du CBD de Haute Qualité</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div>
               <CheckCircleIcon className="w-8 h-8 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Produits Testés</h3>
-              <p className="text-primary-100">Analyses en laboratoire indépendant</p>
+              <h3 className="font-semibold mb-2">Qualité Contrôlée</h3>
+              <p className="text-primary-100">Nous avons sélectionné avec soin les produits que nous vous proposons</p>
             </div>
             <div>
               <CheckCircleIcon className="w-8 h-8 mx-auto mb-3" />
               <h3 className="font-semibold mb-2">THC &lt; 0.3%</h3>
-              <p className="text-primary-100">Conformité légale garantie</p>
+              <p className="text-primary-100">Tous nos produits respectent la législation française</p>
             </div>
             <div>
               <CheckCircleIcon className="w-8 h-8 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Bio & Naturel</h3>
-              <p className="text-primary-100">Sans pesticides ni OGM</p>
+              <h3 className="font-semibold mb-2">Livraison Discrète</h3>
+              <p className="text-primary-100">Expédition discrète et sécurisée</p>
             </div>
           </div>
         </motion.div>
@@ -283,9 +259,9 @@ export default function AboutPage() {
             className="text-center"
           >
             <UsersIcon className="w-12 h-12 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold mb-4">Rejoignez notre communauté</h2>
+            <h2 className="text-3xl font-bold mb-4">Découvrez nos produits CBD</h2>
             <p className="text-xl mb-8 text-neutral-300 max-w-2xl mx-auto">
-              Des milliers de clients nous font déjà confiance. Découvrez pourquoi !
+              Fleurs, résines, infusions... Trouvez le produit CBD qui vous convient !
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -300,14 +276,7 @@ export default function AboutPage() {
               >
                 Découvrir nos produits
               </a>
-              <a
-                href="https://www.google.com/search?rls=en&q=Bon%20Plan%20CBD%20Rouen%20(%26%20Livraison)%20Avis&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxK2MDU2NDIxNjYzNTOwMDQxMTG22MDI-IpR1Sk_TyEgJzFPwdnJRSEovzQ1T0FDTcEns6woMbM4P09TwbEss3gRK3HqABE65ZhqAAAA&rldimm=8531243365608144438&tbm=lcl&client=safari&cs=1&hl=fr&sa=X&ved=0CB0Q9fQKKABqFwoTCKjFs5WxpY4DFQAAAAAdAAAAABAH&biw=1470&bih=839&dpr=2#lkt=LocalPoiReviews"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary-600 text-white font-semibold rounded-full hover:bg-secondary-700 transition-colors"
-              >
-                Voir les avis des clients
-              </a>
+
             </div>
           </motion.div>
         </div>
