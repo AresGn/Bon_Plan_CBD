@@ -33,15 +33,7 @@ const categories = [
     icon: '☕',
     badge: 'Nouveau',
   },
-  {
-    name: 'Cosmétiques',
-    href: '/produits/cosmetiques',
-    image: '/images/img5.jpg',
-    description: 'Crèmes, Baumes, Soins',
-    color: 'from-pink-400 to-pink-600',
-    icon: '🧴',
-    badge: null,
-  },
+
   {
     name: 'Accessoires',
     href: '/produits/accessoires',

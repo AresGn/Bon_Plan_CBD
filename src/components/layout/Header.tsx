@@ -16,7 +16,6 @@ const navigation = [
       { name: 'Fleurs CBD', href: '/produits/fleurs', icon: '🌿' },
       { name: 'Résines CBD', href: '/produits/resines', icon: '🟫' },
       { name: 'Infusions CBD', href: '/produits/infusions', icon: '☕' },
-      { name: 'Cosmétiques CBD', href: '/produits/cosmetiques', icon: '🧼' },
       { name: 'Vaporisateurs', href: '/produits/vaporisateurs', icon: '💨' },
     ]
   },
