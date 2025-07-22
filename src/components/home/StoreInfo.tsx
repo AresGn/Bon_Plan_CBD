@@ -21,7 +21,7 @@ export default function StoreInfo() {
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-neutral-900">Adresse</h3>
                   <p className="mt-1 text-neutral-600">
-                    123 Rue du Commerce<br />
+                    7 Rue Saint-Gervais<br />
                     76000 Rouen
                   </p>
                 </div>
@@ -32,9 +32,8 @@ export default function StoreInfo() {
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-neutral-900">Horaires d'ouverture</h3>
                   <div className="mt-1 text-neutral-600">
-                    <p>Mardi - Vendredi : 10h00 - 19h00</p>
-                    <p>Samedi : 10h00 - 19h00</p>
-                    <p>Dimanche - Lundi : Fermé</p>
+                    <p>Lundi - Dimanche : 11h00 – 21h00</p>
+                    <p className="text-sm text-neutral-500">(peut varier les jours fériés)</p>
                   </div>
                 </div>
               </div>
@@ -44,8 +43,8 @@ export default function StoreInfo() {
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-neutral-900">Contact</h3>
                   <p className="mt-1 text-neutral-600">
-                    Téléphone : 02 35 XX XX XX<br />
-                    Email : contact@bonplancbd.fr
+                    Téléphone : 07 88 64 69 83<br />
+                    Email : Bonplanpro76@gmail.com
                   </p>
                 </div>
               </div>

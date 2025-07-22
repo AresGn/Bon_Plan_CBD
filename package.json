@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
+    "start:server": "node server.js",
+    "start:prod": "cross-env NODE_ENV=production node server.js",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
     "build:prod": "next build && next-sitemap",

@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     'fleurs': 'Fleurs CBD',
     'resines': 'Résines CBD',
     'infusions': 'Infusions CBD',
-    'cosmetiques': 'Cosmétiques CBD',
+
     'accessoires': 'Accessoires CBD'
   }
 

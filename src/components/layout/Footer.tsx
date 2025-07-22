@@ -6,7 +6,6 @@ const footerLinks = {
     { name: 'Fleurs CBD', href: '/produits/fleurs' },
     { name: 'Résines CBD', href: '/produits/resines' },
     { name: 'Infusions CBD', href: '/produits/infusions' },
-    { name: 'Cosmétiques CBD', href: '/produits/cosmetiques' },
   ],
   informations: [
     { name: 'À propos', href: '/a-propos' },
@@ -109,16 +108,20 @@ export default function Footer() {
                 <ul role="list" className="mt-4 space-y-4">
                   <li className="text-base text-neutral-400">
                     <strong>Adresse :</strong><br />
-                    123 Rue du Commerce<br />
+                    7 Rue Saint-Gervais<br />
                     76000 Rouen
                   </li>
                   <li className="text-base text-neutral-400">
                     <strong>Téléphone :</strong><br />
-                    02 35 XX XX XX
+                    07 88 64 69 83
                   </li>
                   <li className="text-base text-neutral-400">
                     <strong>Email :</strong><br />
-                    contact@bonplancbd.fr
+                    Bonplanpro76@gmail.com
+                  </li>
+                  <li className="text-base text-neutral-400">
+                    <strong>Horaires :</strong><br />
+                    Lundi-Dimanche : 11h00 – 21h00
                   </li>
                 </ul>
               </div>
@@ -129,9 +132,23 @@ export default function Footer() {
         {/* Paiements et certifications */}
         <div className="mt-12 border-t border-neutral-800 pt-8">
           <div className="flex flex-col items-center space-y-4 md:flex-row md:justify-between md:space-y-0">
-            <p className="text-base text-neutral-400">
-              © 2024 Bon Plan CBD. Tous droits réservés.
-            </p>
+            <div className="flex items-center space-x-4">
+              <Image
+                src="/images/logo.JPg"
+                alt="Bon Plan Pro 76"
+                width={32}
+                height={32}
+                className="h-8 w-auto"
+              />
+              <div className="flex flex-col">
+                <p className="text-base text-neutral-400">
+                  © 2024 Bon Plan Pro 76. Tous droits réservés.
+                </p>
+                <Link href="/mentions-legales" className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors">
+                  Mentions légales
+                </Link>
+              </div>
+            </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-neutral-400">Paiements sécurisés :</span>
               <Image src="/images/payments/visa.svg" alt="Visa" width={40} height={25} />
