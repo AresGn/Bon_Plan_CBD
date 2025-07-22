@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import AddressForm from '@/components/user/AddressForm'
 import axios from 'axios'
 import { 
   UserCircleIcon, 
@@ -409,13 +410,10 @@ export default function AccountPage() {
               </div>
             )}
 
-            {activeTab === 'addresses' && (
+{activeTab === 'addresses' && (
               <div className="card p-6">
                 <h2 className="text-lg font-medium text-neutral-900 mb-4">Mes adresses</h2>
-                <p className="text-neutral-600">Aucune adresse enregistrée.</p>
-                <button className="btn-primary mt-4">
-                  Ajouter une adresse
-                </button>
+                <AddressForm onSuccess={() => toast.success('Nouvelle adresse ajoutée!')} />
               </div>
             )}
 

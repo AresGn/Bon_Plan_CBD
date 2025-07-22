@@ -315,22 +315,25 @@ export default function PromotionsPage() {
             className="text-center"
           >
             <TagIcon className="w-12 h-12 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold mb-4">Ne ratez pas ces offres !</h2>
-            <p className="text-xl mb-8 text-pink-100 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ne ratez pas ces offres !</h2>
+            <p className="text-lg sm:text-xl mb-8 text-pink-100 max-w-2xl mx-auto px-4">
               Abonnez-vous à notre newsletter pour recevoir toutes les promotions et nouveautés en exclusivité
             </p>
-            <form className="max-w-md mx-auto flex gap-4">
-              <input
-                type="email"
-                placeholder="Votre adresse email"
-                className="flex-1 px-6 py-3 rounded-full text-neutral-900 placeholder-neutral-500"
-              />
-              <button
-                type="submit"
-                className="px-8 py-3 bg-white text-pink-700 font-semibold rounded-full hover:bg-neutral-100 transition-colors"
-              >
-                S'inscrire
-              </button>
+            <form className="max-w-md mx-auto px-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="email"
+                  placeholder="Votre adresse email"
+                  className="flex-1 px-4 sm:px-6 py-3 rounded-full text-neutral-900 placeholder-neutral-500 text-sm sm:text-base"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="px-6 sm:px-8 py-3 bg-white text-pink-700 font-semibold rounded-full hover:bg-neutral-100 transition-colors whitespace-nowrap text-sm sm:text-base"
+                >
+                  S'inscrire
+                </button>
+              </div>
             </form>
           </motion.div>
         </div>
