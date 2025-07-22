@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  output: "standalone",
+  // Suppression de output: "standalone" pour Vercel
   reactStrictMode: true,
   // Configuration des variables d'environnement pour le déploiement standalone
   env: {

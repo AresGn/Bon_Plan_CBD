@@ -296,11 +296,11 @@ export default function AnalysesPage() {
               <div className="mx-auto w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
                 3
               </div>
-              <h3 className="text-lg font-semibold text-neutral-900 mb-2">Recevez l'Analyse</h3>
+              <h3 className="text-lg font-semibold text-neutral-900 mb-2">Recevez l&apos;Analyse</h3>
               <p className="text-neutral-600">
-                Nous vous envoyons le certificat d'analyse sous 24h
+                Nous vous envoyons le certificat d&apos;analyse sous 24h
               </p>
-            </div>
+            </motion.div>
           </div>
 
           <motion.div
