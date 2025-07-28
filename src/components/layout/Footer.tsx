@@ -151,9 +151,29 @@ export default function Footer() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-neutral-400">Paiements sécurisés :</span>
-              <Image src="/images/payments/visa.svg" alt="Visa" width={40} height={25} />
-              <Image src="/images/payments/mastercard.svg" alt="Mastercard" width={40} height={25} />
-              <Image src="/images/payments/cb.svg" alt="CB" width={40} height={25} />
+              <div className="flex items-center space-x-2">
+                <Image
+                  src="/images/payments/visa.svg"
+                  alt="Visa"
+                  width={40}
+                  height={25}
+                  className="h-6 w-auto bg-white rounded px-1"
+                />
+                <Image
+                  src="/images/payments/mastercard.svg"
+                  alt="Mastercard"
+                  width={40}
+                  height={25}
+                  className="h-6 w-auto bg-white rounded px-1"
+                />
+                <Image
+                  src="/images/payments/cb.svg"
+                  alt="CB"
+                  width={40}
+                  height={25}
+                  className="h-6 w-auto bg-white rounded px-1"
+                />
+              </div>
             </div>
           </div>
         </div>
