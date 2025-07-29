@@ -5,9 +5,9 @@ import { supabaseAdmin } from '@/lib/supabase'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, name, role } = body
+    const { email, password, name } = body // Ne PAS accepter le role depuis le frontend
     
-    console.log('Tentative d\'inscription:', { email, name, role })
+    console.log('Tentative d\'inscription:', { email, name })
 
     // Validation
     if (!email || !password || !name) {
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       name,
-      role: role || 'USER',
+      role: 'USER', // TOUJOURS créer en tant que USER normal
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
