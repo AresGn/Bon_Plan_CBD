@@ -42,7 +42,6 @@ const mockProduct = {
   
   Nos fleurs sont rigoureusement sélectionnées et testées en laboratoire pour garantir une qualité optimale et un taux de THC inférieur à 0,3% conforme à la législation française.`,
   inStock: true,
-  labAnalysisUrl: '/analyses/amnesia-haze-lab.pdf',
 }
 
 export default function ProductDetailPage({ 
@@ -251,7 +250,7 @@ export default function ProductDetailPage({
                       Produit testé et certifié
                     </p>
                     <p className="text-sm text-neutral-600">
-                      Analyses laboratoire disponibles, THC &lt;0.3% garanti
+                      THC &lt;0.3% garanti
                     </p>
                   </div>
                 </div>
@@ -334,38 +333,7 @@ export default function ProductDetailPage({
             )}
           </div>
 
-          {/* Analyse laboratoire */}
-          <div className="border-t border-neutral-200 pt-8">
-            <button
-              onClick={() => setShowAnalysis(!showAnalysis)}
-              className="flex w-full items-center justify-between text-left"
-            >
-              <h2 className="text-lg font-medium text-neutral-900">Analyse laboratoire</h2>
-              <ChevronDownIcon 
-                className={`h-5 w-5 text-neutral-500 transition-transform ${
-                  showAnalysis ? 'rotate-180' : ''
-                }`} 
-              />
-            </button>
-            {showAnalysis && (
-              <div className="mt-4">
-                <p className="text-sm text-neutral-600">
-                  Tous nos produits sont analysés par des laboratoires indépendants certifiés.
-                </p>
-                <a
-                  href={mockProduct.labAnalysisUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
-                >
-                  Télécharger l'analyse complète (PDF)
-                  <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </a>
-              </div>
-            )}
-          </div>
+
         </div>
       </div>
     </div>

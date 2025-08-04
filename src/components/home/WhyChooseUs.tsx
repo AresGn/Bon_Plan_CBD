@@ -16,7 +16,7 @@ import Image from 'next/image'
 const features = [
   {
     name: 'Produits Certifiés',
-    description: 'Tous nos produits sont testés en laboratoire indépendant. Analyses disponibles sur demande.',
+    description: 'Tous nos produits sont testés en laboratoire indépendant pour garantir leur qualité.',
     icon: ShieldCheckIcon,
     gradient: 'from-emerald-400 to-emerald-600',
     delay: 0,
