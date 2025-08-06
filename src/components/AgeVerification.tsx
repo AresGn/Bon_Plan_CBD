@@ -89,7 +89,7 @@ export default function AgeVerification() {
                 <div className="relative inline-block mb-4">
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-xl animate-pulse" />
                   <Image
-                    src="/images/logo.JPg"
+                    src="/images/logo.jpg"
                     alt="Bon Plan CBD"
                     width={80}
                     height={80}

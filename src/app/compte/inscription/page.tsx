@@ -122,13 +122,6 @@ export default function InscriptionPage() {
     setIsLoading(true)
 
     try {
-      // Vérifier s'il y a déjà des utilisateurs dans la base
-      const { data: existingUsers, error: countError } = await supabase
-        .from('User')
-        .select('id', { count: 'exact', head: true })
-      
-      const isFirstUser = !existingUsers || existingUsers.length === 0
-      
       // Vérifier si l'email existe déjà
       const { data: existingUser } = await supabase
         .from('User')
@@ -141,6 +134,7 @@ export default function InscriptionPage() {
       }
 
       // Créer l'utilisateur dans notre table User avec un appel API
+      // TOUJOURS créer en tant que USER normal
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -150,7 +144,7 @@ export default function InscriptionPage() {
           email: formData.email,
           password: formData.password,
           name: `${formData.firstName} ${formData.lastName}`,
-          role: isFirstUser ? 'ADMIN' : 'USER'
+          role: 'USER' // Toujours USER par défaut
         })
       })
 
@@ -159,11 +153,7 @@ export default function InscriptionPage() {
         throw new Error(data.message || 'Erreur lors de l\'inscription')
       }
 
-      if (isFirstUser) {
-        toast.success('Inscription réussie ! Vous êtes le premier utilisateur et avez été nommé administrateur.')
-      } else {
-        toast.success('Inscription réussie ! Bienvenue chez Bon Plan CBD')
-      }
+      toast.success('Inscription réussie ! Bienvenue chez Bon Plan CBD')
 
       router.push('/compte')
     } catch (error) {

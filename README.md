@@ -5,7 +5,7 @@ Site e-commerce pour la boutique Bon Plan CBD à Rouen, spécialisée dans la ve
 ## 🚀 Fonctionnalités
 
 - **Catalogue produits** : Fleurs, huiles, résines, infusions CBD
-- **Fiches produits détaillées** : Taux CBD/THC, analyses laboratoire, avis clients
+- **Fiches produits détaillées** : Taux CBD/THC, avis clients
 - **Panier & Commande** : Gestion du panier, checkout sécurisé
 - **Compte client** : Inscription, connexion, historique commandes
 - **Paiement sécurisé** : Intégration Stripe (compatible CBD)

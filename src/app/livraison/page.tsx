@@ -259,8 +259,7 @@ export default function LivraisonPage() {
                 Les produits CBD peuvent-ils être saisis par les douanes ?
               </h3>
               <p className="text-neutral-600">
-                Non, tous nos produits respectent la législation française (THC &lt; 0,3%) et sont 
-                accompagnés des certificats d'analyse nécessaires.
+                Non, tous nos produits respectent la législation française (THC &lt; 0,3%).
               </p>
             </div>
           </div>

@@ -10,7 +10,7 @@ const testimonials = [
   {
     name: 'Marc J.',
     role: 'Passionné de CBD',
-    testimonial: "Le meilleur shop CBD à Rouen. Enfin une boutique avec des analyses disponibles, ça rassure beaucoup.",
+    testimonial: "Le meilleur shop CBD à Rouen. Enfin une boutique de qualité, ça rassure beaucoup.",
     icon: CheckBadgeIcon,
   },
   {

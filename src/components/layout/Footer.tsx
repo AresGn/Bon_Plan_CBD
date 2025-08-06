@@ -12,7 +12,6 @@ const footerLinks = {
     { name: 'Livraison', href: '/livraison' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Blog CBD', href: '/blog' },
-    { name: 'Analyses laboratoire', href: '/analyses' },
   ],
   legal: [
     { name: 'Mentions légales', href: '/mentions-legales' },
@@ -31,7 +30,7 @@ export default function Footer() {
           <div className="space-y-8 xl:col-span-1">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/images/logo.JPg"
+                src="/images/logo.jpg"
                 alt="Bon Plan CBD"
                 width={40}
                 height={40}
@@ -43,8 +42,8 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-base text-neutral-400">
-              Votre boutique CBD de confiance à Rouen. Produits certifiés, 
-              analyses laboratoire disponibles, conseils personnalisés.
+              Votre boutique CBD de confiance à Rouen. Produits certifiés,
+              conseils personnalisés.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-neutral-400 hover:text-white">
@@ -134,7 +133,7 @@ export default function Footer() {
           <div className="flex flex-col items-center space-y-4 md:flex-row md:justify-between md:space-y-0">
             <div className="flex items-center space-x-4">
               <Image
-                src="/images/logo.JPg"
+                src="/images/logo.jpg"
                 alt="Bon Plan Pro 76"
                 width={32}
                 height={32}

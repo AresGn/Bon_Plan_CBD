@@ -54,7 +54,7 @@ const faqCategories = [
       },
       {
         question: "Vos produits sont-ils testés ?",
-        answer: "Oui, tous nos produits sont testés en laboratoire indépendant pour garantir leur qualité et leur conformité légale. Les analyses sont disponibles sur demande."
+        answer: "Oui, tous nos produits sont testés en laboratoire indépendant pour garantir leur qualité et leur conformité légale."
       }
     ]
   },
@@ -119,7 +119,7 @@ const faqCategories = [
       },
       {
         question: "Puis-je voyager avec du CBD ?",
-        answer: "En France, oui. À l'étranger, vérifiez la législation locale car elle varie selon les pays. Gardez toujours les emballages d'origine et les certificats d'analyse."
+        answer: "En France, oui. À l'étranger, vérifiez la législation locale car elle varie selon les pays. Gardez toujours les emballages d'origine."
       },
       {
         question: "Le CBD est-il un médicament ?",

@@ -24,7 +24,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: 'Bon Plan Pro 76 - La Qualité au Meilleur Prix | Rouen',
-  description: 'Découvrez notre sélection premium de produits CBD : fleurs, résines, infusions. Magasin à Rouen avec analyses laboratoire et conseils personnalisés.',
+  description: 'Découvrez notre sélection premium de produits CBD : fleurs, résines, infusions. Magasin à Rouen avec conseils personnalisés.',
   keywords: 'CBD, Rouen, fleurs CBD, résine CBD, infusion CBD, cannabidiol, boutique CBD',
   openGraph: {
     title: 'Bon Plan Pro 76 - La Qualité au Meilleur Prix',

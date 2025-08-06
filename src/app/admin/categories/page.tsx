@@ -21,6 +21,7 @@ export default function AdminCategoriesPage() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -157,6 +158,40 @@ export default function AdminCategoriesPage() {
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
+  }
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setUploadingImage(true)
+    const uploadFormData = new FormData()
+    uploadFormData.append('file', file)
+
+    try {
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: uploadFormData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erreur lors de l\'upload')
+      }
+
+      const data = await response.json()
+      setFormData(prev => ({ ...prev, image: data.url }))
+      toast.success('Image téléversée avec succès')
+    } catch (error: any) {
+      console.error('Erreur upload:', error)
+      toast.error(error.message || 'Erreur lors du téléversement de l\'image')
+    } finally {
+      setUploadingImage(false)
+    }
   }
 
   if (loading) {
@@ -305,15 +340,31 @@ export default function AdminCategoriesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-1">
-                    URL de l'image
+                    Image de la catégorie
                   </label>
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
-                    placeholder="https://..."
-                  />
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="w-full px-3 py-2 border border-neutral-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                    />
+                    {uploadingImage && (
+                      <p className="text-sm text-neutral-500">Téléversement en cours...</p>
+                    )}
+                    {formData.image && (
+                      <div className="mt-2">
+                        <p className="text-sm text-neutral-600 mb-1">Aperçu :</p>
+                        <Image
+                          src={formData.image}
+                          alt="Aperçu"
+                          width={200}
+                          height={100}
+                          className="rounded-lg object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4">
