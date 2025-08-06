@@ -34,6 +34,8 @@ export default function Header() {
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }

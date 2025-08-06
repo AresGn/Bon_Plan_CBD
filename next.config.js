@@ -11,8 +11,14 @@ const nextConfig = {
     JWT_SECRET: process.env.JWT_SECRET,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
 
-    // Variables Stripe
+    // Variables Stripe (à supprimer après migration)
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+
+    // Variables PayGreen
+    PAYGREEN_SHOP_ID: process.env.PAYGREEN_SHOP_ID,
+    PAYGREEN_SECRET_KEY: process.env.PAYGREEN_SECRET_KEY,
+    PAYGREEN_PUBLIC_KEY: process.env.PAYGREEN_PUBLIC_KEY,
+    PAYGREEN_ENV: process.env.PAYGREEN_ENV,
 
     // Variables Email (optionnelles)
     EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,

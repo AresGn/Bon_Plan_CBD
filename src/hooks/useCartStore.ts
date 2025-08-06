@@ -78,6 +78,7 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'bon-plan-cbd-cart',
+      skipHydration: true, // Évite l'erreur SSR
     }
   )
 )

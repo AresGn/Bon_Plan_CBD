@@ -94,36 +94,76 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    
+
+    // Validation des données
+    if (!body.name || !body.name.trim()) {
+      return NextResponse.json({ error: 'Le nom du produit est requis' }, { status: 400 })
+    }
+
+    if (!body.categoryId || !body.categoryId.trim()) {
+      return NextResponse.json({ error: 'La catégorie est requise' }, { status: 400 })
+    }
+
+    if (!body.price || isNaN(Number(body.price)) || Number(body.price) <= 0) {
+      return NextResponse.json({ error: 'Le prix doit être un nombre valide supérieur à 0' }, { status: 400 })
+    }
+
+    if (isNaN(Number(body.stock)) || Number(body.stock) < 0) {
+      return NextResponse.json({ error: 'Le stock doit être un nombre valide' }, { status: 400 })
+    }
+
+    if (isNaN(Number(body.cbdRate)) || Number(body.cbdRate) < 0) {
+      return NextResponse.json({ error: 'Le taux CBD doit être un nombre valide' }, { status: 400 })
+    }
+
+    if (isNaN(Number(body.thcRate)) || Number(body.thcRate) < 0 || Number(body.thcRate) > 0.3) {
+      return NextResponse.json({ error: 'Le taux THC doit être un nombre valide entre 0 et 0.3% (limite légale UE)' }, { status: 400 })
+    }
+
+    // Vérifier que la catégorie existe
+    const { data: categoryExists } = await supabaseAdmin
+      .from('Category')
+      .select('id')
+      .eq('id', body.categoryId.trim())
+      .single()
+
+    if (!categoryExists) {
+      return NextResponse.json({ error: 'La catégorie sélectionnée n\'existe pas' }, { status: 400 })
+    }
+
     // Generate slug from name
-    const slug = body.slug || body.name
+    const slug = body.slug || body.name.trim()
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
 
+    const productData = {
+      name: body.name.trim(),
+      slug,
+      description: body.description?.trim() || '',
+      price: Number(body.price),
+      originalPrice: Number(body.originalPrice) || 0,
+      stock: Number(body.stock),
+      images: body.images || [],
+      cbdRate: Number(body.cbdRate),
+      thcRate: Number(body.thcRate),
+      origin: body.origin?.trim() || '',
+      cultivationType: body.cultivationType || 'indoor',
+      terpenes: body.terpenes || [],
+      effects: body.effects || [],
+      labAnalysis: body.labAnalysis?.trim() || '',
+      status: body.status || 'DRAFT',
+      featured: Boolean(body.featured),
+      categoryId: body.categoryId.trim(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    console.log('Données produit à insérer:', productData)
+
     const { data: product, error } = await supabaseAdmin
       .from('Product')
-      .insert({
-        name: body.name,
-        slug,
-        description: body.description,
-        price: body.price,
-        originalPrice: body.originalPrice,
-        stock: body.stock,
-        images: body.images || [],
-        cbdRate: body.cbdRate,
-        thcRate: body.thcRate,
-        origin: body.origin,
-        cultivationType: body.cultivationType,
-        terpenes: body.terpenes || [],
-        effects: body.effects || [],
-        labAnalysis: body.labAnalysis,
-        status: body.status,
-        featured: body.featured || false,
-        categoryId: body.categoryId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      })
+      .insert(productData)
       .select(`
         *,
         category:Category(*)
@@ -131,14 +171,20 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Supabase error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      console.error('Erreur Supabase:', error)
+      return NextResponse.json({
+        error: `Erreur lors de la création: ${error.message}`,
+        details: error
+      }, { status: 500 })
     }
 
     return NextResponse.json(product, { status: 201 })
-  } catch (error) {
-    console.error('Error creating product:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Erreur lors de la création du produit:', error)
+    return NextResponse.json({
+      error: error.message || 'Erreur interne du serveur',
+      details: error
+    }, { status: 500 })
   }
 }
 

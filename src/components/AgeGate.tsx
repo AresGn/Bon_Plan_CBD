@@ -13,6 +13,12 @@ export default function AgeGate({ children }: AgeGateProps) {
   const [showContent, setShowContent] = useState(false)
 
   useEffect(() => {
+    // Vérifier qu'on est côté client
+    if (typeof window === 'undefined') {
+      setIsLoading(false)
+      return
+    }
+
     // Vérifier si l'utilisateur a déjà confirmé son âge
     try {
       const ageData = localStorage.getItem('ageVerificationData')
@@ -31,17 +37,21 @@ export default function AgeGate({ children }: AgeGateProps) {
     }
     
     // Si pas de données valides, supprimer et demander la vérification
-    localStorage.removeItem('ageVerificationData')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('ageVerificationData')
+    }
     setIsVerified(null) // null = pas encore de réponse
     setIsLoading(false)
   }, [])
 
   const handleAccept = () => {
     // Enregistrer la vérification d'âge
-    localStorage.setItem('ageVerificationData', JSON.stringify({ 
-      verified: true, 
-      date: Date.now() 
-    }))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ageVerificationData', JSON.stringify({
+        verified: true,
+        date: Date.now()
+      }))
+    }
     setIsVerified(true)
     setShowContent(true)
   }
@@ -50,7 +60,9 @@ export default function AgeGate({ children }: AgeGateProps) {
     // Refuser l'accès et rediriger vers Google
     setIsVerified(false)
     // Rediriger immédiatement vers Google
-    window.location.href = 'https://www.google.com'
+    if (typeof window !== 'undefined') {
+      window.location.href = 'https://www.google.com'
+    }
   }
 
   // Pendant le chargement, afficher un écran de chargement
@@ -86,7 +98,9 @@ export default function AgeGate({ children }: AgeGateProps) {
           <button
             onClick={() => {
               setIsVerified(null)
-              localStorage.removeItem('ageVerificationData')
+              if (typeof window !== 'undefined') {
+                localStorage.removeItem('ageVerificationData')
+              }
             }}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >

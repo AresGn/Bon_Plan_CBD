@@ -22,10 +22,10 @@ interface FormData {
   name: string
   slug: string
   categoryId: string
-  price: number
-  originalPrice: number
-  stock: number
-  cbdRate: number
+  price: number | ''
+  originalPrice: number | ''
+  stock: number | ''
+  cbdRate: number | ''
   thcRate: number
   status: string
   description: string
@@ -48,10 +48,10 @@ export default function NewProductPage() {
     name: '',
     slug: '',
     categoryId: '',
-    price: 0,
-    originalPrice: 0,
-    stock: 0,
-    cbdRate: 0,
+    price: '',
+    originalPrice: '',
+    stock: '',
+    cbdRate: '',
     thcRate: 0.2,
     status: 'ACTIVE',
     description: '',
@@ -68,12 +68,12 @@ export default function NewProductPage() {
   const [newTerpene, setNewTerpene] = useState('')
   const [newEffect, setNewEffect] = useState('')
 
-  // Mettre à jour categoryId quand les catégories sont chargées
+  // Debug: Afficher les catégories chargées
   useEffect(() => {
-    if (categories.length > 0 && !formData.categoryId) {
-      setFormData(prev => ({ ...prev, categoryId: categories[0].id }))
+    if (categories.length > 0) {
+      console.log('Catégories chargées:', categories.map(cat => ({ id: cat.id, name: cat.name })))
     }
-  }, [categories, formData.categoryId])
+  }, [categories])
 
   // Générer le slug automatiquement
   useEffect(() => {
@@ -180,10 +180,38 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // Validation
-    if (!formData.name || !formData.categoryId || formData.price <= 0) {
-      toast.error('Veuillez remplir tous les champs obligatoires')
+
+    // Validation améliorée
+    if (!formData.name.trim()) {
+      toast.error('Le nom du produit est requis')
+      return
+    }
+
+    if (!formData.categoryId || formData.categoryId.trim() === '') {
+      toast.error('Veuillez sélectionner une catégorie')
+      return
+    }
+
+    const priceValue = typeof formData.price === 'string' ? parseFloat(formData.price) : formData.price;
+    if (!priceValue || priceValue <= 0 || isNaN(priceValue)) {
+      toast.error('Veuillez saisir un prix valide supérieur à 0')
+      return
+    }
+
+    const stockValue = typeof formData.stock === 'string' ? parseInt(formData.stock) : formData.stock;
+    if (formData.stock === '' || isNaN(stockValue) || stockValue < 0) {
+      toast.error('Veuillez saisir un stock valide')
+      return
+    }
+
+    const cbdValue = typeof formData.cbdRate === 'string' ? parseFloat(formData.cbdRate) : formData.cbdRate;
+    if (!cbdValue || cbdValue <= 0 || isNaN(cbdValue)) {
+      toast.error('Veuillez saisir un taux CBD valide supérieur à 0')
+      return
+    }
+
+    if (isNaN(formData.thcRate) || formData.thcRate < 0 || formData.thcRate > 0.3) {
+      toast.error('Le taux THC doit être un nombre valide entre 0 et 0.3% (limite légale UE)')
       return
     }
 
@@ -195,6 +223,21 @@ export default function NewProductPage() {
     setIsSubmitting(true)
 
     try {
+      // Préparer les données avec validation des nombres
+      const productData = {
+        ...formData,
+        price: typeof formData.price === 'string' ? parseFloat(formData.price) : formData.price,
+        originalPrice: typeof formData.originalPrice === 'string' ? (formData.originalPrice === '' ? 0 : parseFloat(formData.originalPrice)) : formData.originalPrice,
+        stock: typeof formData.stock === 'string' ? parseInt(formData.stock) : formData.stock,
+        cbdRate: typeof formData.cbdRate === 'string' ? parseFloat(formData.cbdRate) : formData.cbdRate,
+        thcRate: Number(formData.thcRate),
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        categoryId: formData.categoryId.trim()
+      }
+
+      console.log('Données à envoyer:', productData)
+
       const token = localStorage.getItem('adminToken')
       const response = await fetch('/api/admin/products', {
         method: 'POST',
@@ -202,11 +245,12 @@ export default function NewProductPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(productData)
       })
 
       if (!response.ok) {
         const error = await response.json()
+        console.error('Erreur API:', error)
         throw new Error(error.error || 'Erreur lors de la création')
       }
 
@@ -271,14 +315,27 @@ export default function NewProductPage() {
                   className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   required
                 >
+                  <option value="">Sélectionnez une catégorie</option>
                   {categoriesLoading ? (
-                    <option>Chargement...</option>
+                    <option disabled>Chargement...</option>
                   ) : (
                     categories.map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))
                   )}
                 </select>
+                {categories.length === 0 && !categoriesLoading && (
+                  <p className="mt-2 text-sm text-red-600">
+                    Aucune catégorie disponible.
+                    <button
+                      type="button"
+                      onClick={() => window.open('/admin/categories', '_blank')}
+                      className="ml-1 text-primary-600 hover:text-primary-700 underline"
+                    >
+                      Créer une catégorie
+                    </button>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -290,8 +347,18 @@ export default function NewProductPage() {
                 type="number"
                 step="0.01"
                 min="0"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                value={formData.price === '' ? '' : formData.price.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, price: '' })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, price: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="9.90"
                 required
@@ -380,8 +447,18 @@ export default function NewProductPage() {
                 step="0.1"
                 min="0"
                 max="100"
-                value={formData.cbdRate}
-                onChange={(e) => setFormData({ ...formData, cbdRate: parseFloat(e.target.value) || 0 })}
+                value={formData.cbdRate === '' ? '' : formData.cbdRate.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, cbdRate: '' })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, cbdRate: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="18.0"
                 required
@@ -397,8 +474,18 @@ export default function NewProductPage() {
                 step="0.1"
                 min="0"
                 max="0.3"
-                value={formData.thcRate}
-                onChange={(e) => setFormData({ ...formData, thcRate: parseFloat(e.target.value) || 0 })}
+                value={formData.thcRate.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, thcRate: 0 })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, thcRate: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="0.2"
                 required
@@ -413,8 +500,18 @@ export default function NewProductPage() {
               <input
                 type="number"
                 min="0"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                value={formData.stock === '' ? '' : formData.stock.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, stock: '' })
+                  } else {
+                    const numValue = parseInt(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, stock: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="100"
                 required
@@ -458,8 +555,18 @@ export default function NewProductPage() {
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: parseFloat(e.target.value) || 0 })}
+                    value={formData.originalPrice === '' ? '' : formData.originalPrice.toString()}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (value === '') {
+                        setFormData({ ...formData, originalPrice: '' })
+                      } else {
+                        const numValue = parseFloat(value)
+                        if (!isNaN(numValue)) {
+                          setFormData({ ...formData, originalPrice: numValue })
+                        }
+                      }
+                    }}
                     className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Prix avant réduction"
                   />

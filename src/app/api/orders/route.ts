@@ -169,7 +169,8 @@ export async function POST(request: NextRequest) {
         shippingAddress: JSON.stringify(shippingAddress),
         billingAddress: billingAddress ? JSON.stringify(billingAddress) : JSON.stringify(shippingAddress),
         paymentMethod,
-        paymentStatus: 'PENDING'
+        paymentStatus: 'PENDING',
+        paymentProvider: 'paygreen' // Nouveau champ pour identifier le provider
       })
       .select()
       .single();

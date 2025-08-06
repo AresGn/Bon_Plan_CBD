@@ -27,6 +27,7 @@ export default function AdminCategoriesPage() {
     description: '',
     image: ''
   })
+  const [isSeeding, setIsSeeding] = useState(false)
 
   useEffect(() => {
     fetchCategories()
@@ -123,6 +124,32 @@ export default function AdminCategoriesPage() {
     })
   }
 
+  const handleSeedCategories = async () => {
+    setIsSeeding(true)
+    try {
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/seed-categories', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de l\'initialisation')
+      }
+
+      const result = await response.json()
+      toast.success('Catégories initialisées avec succès')
+      fetchCategories()
+    } catch (error: any) {
+      console.error('Erreur:', error)
+      toast.error('Erreur lors de l\'initialisation des catégories')
+    } finally {
+      setIsSeeding(false)
+    }
+  }
+
   const generateSlug = (name: string) => {
     return name
       .toLowerCase()
@@ -147,16 +174,27 @@ export default function AdminCategoriesPage() {
           <h1 className="text-3xl font-bold text-neutral-900">Gestion des catégories</h1>
           <p className="mt-2 text-neutral-600">Gérez les catégories de produits</p>
         </div>
-        <button
-          onClick={() => {
-            resetForm()
-            setShowModal(true)
-          }}
-          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-        >
-          <PlusIcon className="h-5 w-5 mr-2" />
-          Nouvelle catégorie
-        </button>
+        <div className="flex gap-3">
+          {categories.length === 0 && (
+            <button
+              onClick={handleSeedCategories}
+              disabled={isSeeding}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+            >
+              {isSeeding ? 'Initialisation...' : 'Initialiser les catégories'}
+            </button>
+          )}
+          <button
+            onClick={() => {
+              resetForm()
+              setShowModal(true)
+            }}
+            className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+          >
+            <PlusIcon className="h-5 w-5 mr-2" />
+            Nouvelle catégorie
+          </button>
+        </div>
       </div>
 
       {/* Grille des catégories */}

@@ -36,6 +36,12 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          PAYGREEN_SHOP_ID: ${{ secrets.PAYGREEN_SHOP_ID }}
+          PAYGREEN_SECRET_KEY: ${{ secrets.PAYGREEN_SECRET_KEY }}
+          PAYGREEN_PUBLIC_KEY: ${{ secrets.PAYGREEN_PUBLIC_KEY }}
+          PAYGREEN_ENV: ${{ secrets.PAYGREEN_ENV }}
+          NEXT_PUBLIC_PAYGREEN_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_PAYGREEN_PUBLIC_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25

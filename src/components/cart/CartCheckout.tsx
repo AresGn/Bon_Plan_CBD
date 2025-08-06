@@ -68,7 +68,7 @@ export default function CartCheckout() {
           quantity: item.quantity
         })),
         shippingAddress,
-        paymentMethod: 'card', // Pour l'instant, on simule le paiement par carte
+        paymentMethod: 'paygreen_card', // Paiement par carte via PayGreen
         email: user?.email,
         phone: shippingAddress.phone
       }

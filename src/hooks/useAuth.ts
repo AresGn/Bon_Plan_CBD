@@ -29,6 +29,12 @@ export const useAuth = () => {
 
   const checkAuth = async () => {
     try {
+      // Vérifier qu'on est côté client
+      if (typeof window === 'undefined') {
+        setLoading(false);
+        return;
+      }
+
       const token = localStorage.getItem('auth-token');
       
       if (!token) {
@@ -88,11 +94,13 @@ export const useAuth = () => {
       const data = await response.json();
 
       if (response.ok && data.token) {
-        localStorage.setItem('auth-token', data.token);
-        // Cookie avec expiration de 7 jours
-        const expires = new Date();
-        expires.setDate(expires.getDate() + 7);
-        document.cookie = `auth-token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth-token', data.token);
+          // Cookie avec expiration de 7 jours
+          const expires = new Date();
+          expires.setDate(expires.getDate() + 7);
+          document.cookie = `auth-token=${data.token}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+        }
         
         setUser({
           id: data.user.id,
@@ -115,8 +123,10 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem('auth-token');
-    document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth-token');
+      document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    }
     setUser(null);
     toast.success('Déconnexion réussie');
     router.push('/');

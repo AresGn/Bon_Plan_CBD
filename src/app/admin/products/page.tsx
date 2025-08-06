@@ -393,7 +393,7 @@ function ProductModal({
 
     try {
       const token = localStorage.getItem('adminToken');
-      const url = product ? `/api/products/${product.id}` : '/api/products';
+      const url = product ? `/api/admin/products/${product.id}` : '/api/admin/products';
       const method = product ? 'PUT' : 'POST';
       
       // Generate slug from name if not provided
@@ -552,8 +552,18 @@ function ProductModal({
               <input
                 type="number"
                 step="0.01"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                value={formData.price === 0 ? '' : formData.price.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, price: 0 })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, price: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 required
               />
@@ -565,8 +575,18 @@ function ProductModal({
               </label>
               <input
                 type="number"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
+                value={formData.stock === 0 ? '' : formData.stock.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, stock: 0 })
+                  } else {
+                    const numValue = parseInt(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, stock: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 required
               />
@@ -579,8 +599,18 @@ function ProductModal({
               <input
                 type="number"
                 step="0.1"
-                value={formData.cbdRate}
-                onChange={(e) => setFormData({ ...formData, cbdRate: parseFloat(e.target.value) })}
+                value={formData.cbdRate === 0 ? '' : formData.cbdRate.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, cbdRate: 0 })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, cbdRate: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 required
               />
@@ -593,8 +623,18 @@ function ProductModal({
               <input
                 type="number"
                 step="0.1"
-                value={formData.thcRate}
-                onChange={(e) => setFormData({ ...formData, thcRate: parseFloat(e.target.value) })}
+                value={formData.thcRate.toString()}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value === '') {
+                    setFormData({ ...formData, thcRate: 0 })
+                  } else {
+                    const numValue = parseFloat(value)
+                    if (!isNaN(numValue)) {
+                      setFormData({ ...formData, thcRate: numValue })
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 required
               />

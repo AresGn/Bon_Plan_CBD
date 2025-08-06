@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCartStore } from '@/hooks/useCartStore'
-import { loadStripe } from '@stripe/stripe-js'
 import toast from 'react-hot-toast'
+import PayGreenForm from '@/components/payment/PayGreenForm'
+import axios from 'axios'
 
 type CheckoutFormData = {
   email: string
@@ -26,6 +27,8 @@ type CheckoutFormData = {
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [paymentOrderId, setPaymentOrderId] = useState<string | null>(null)
+  const [showPaymentForm, setShowPaymentForm] = useState(false)
   const router = useRouter()
   
   const {
@@ -47,21 +50,42 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsProcessing(true)
-    
+
     try {
-      // Ici, vous intégreriez l'API Stripe et votre backend
-      // Pour la démo, on simule juste le processus
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      toast.success('Commande validée avec succès !')
-      clearCart()
-      // Redirection vers la page de confirmation
-      router.push('/commande/confirmation')
-    } catch (error) {
-      toast.error('Une erreur est survenue. Veuillez réessayer.')
+      // Créer le Payment Order PayGreen
+      const token = localStorage.getItem('auth-token')
+
+      const response = await axios.post('/api/paygreen/create-order', {
+        amount: total,
+        currency: 'eur',
+        customer_email: data.email
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.data.success) {
+        setPaymentOrderId(response.data.paymentOrder.id)
+        setShowPaymentForm(true)
+        toast.success('Commande créée, procédez au paiement')
+      }
+    } catch (error: any) {
+      console.error('Erreur lors de la création de la commande:', error)
+      toast.error(error.response?.data?.error || 'Une erreur est survenue. Veuillez réessayer.')
     } finally {
       setIsProcessing(false)
     }
+  }
+
+  const handlePaymentSuccess = () => {
+    clearCart()
+    router.push('/checkout/success')
+  }
+
+  const handlePaymentError = (error: string) => {
+    toast.error(error)
+    router.push('/checkout/error')
   }
 
   // Redirecté si le panier est vide
@@ -355,7 +379,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="mt-6 text-center text-sm text-neutral-500">
-                  <p>Paiement sécurisé par Stripe</p>
+                  <p>Paiement sécurisé par PayGreen</p>
                   <div className="mt-2 flex justify-center space-x-2">
                     <Image src="/images/payments/visa.svg" alt="Visa" width={40} height={25} />
                     <Image src="/images/payments/mastercard.svg" alt="Mastercard" width={40} height={25} />
@@ -366,6 +390,27 @@ export default function CheckoutPage() {
             </div>
           </div>
         </form>
+
+        {/* Section de paiement PayGreen */}
+        {showPaymentForm && paymentOrderId && (
+          <div className="mt-8">
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Finaliser votre paiement
+              </h2>
+              <PayGreenForm
+                paymentOrderID={paymentOrderId}
+                amount={Math.round(total * 100)} // Convertir en centimes
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                onCancel={() => {
+                  setShowPaymentForm(false)
+                  setPaymentOrderId(null)
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

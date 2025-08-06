@@ -94,7 +94,9 @@ model Order {
   
   paymentMethod   String
   paymentStatus   String      @default("PENDING") // Changed from enum to String
-  paymentId       String?
+  paymentId       String?     // Stripe payment_intent_id ou PayGreen payment_order_id
+  paymentProvider String      @default("stripe") // "stripe" ou "paygreen"
+  paygreenOrderId String?     // ID du Payment Order PayGreen
   
   notes           String?
   
