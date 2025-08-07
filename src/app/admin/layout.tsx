@@ -67,8 +67,12 @@ export default function AdminLayout({
 
         const userData = JSON.parse(userStr)
 
-        // Vérifier que l'utilisateur a le rôle admin
-        if (userData.role !== 'ADMIN') {
+        // Debug: afficher les données utilisateur
+        console.log('Admin user data:', userData)
+
+        // Vérifier que l'utilisateur a le rôle admin (plus permissif)
+        if (userData.role && userData.role !== 'ADMIN' && userData.role !== 'admin') {
+          console.log('Role non autorisé:', userData.role)
           setIsAuthenticated(false)
           setAdminUser(null)
           setIsLoading(false)
@@ -119,8 +123,8 @@ export default function AdminLayout({
     )
   }
 
-  // Si l'utilisateur n'est pas authentifié, ne pas afficher l'interface admin
-  if (!isAuthenticated || !adminUser) {
+  // Si l'utilisateur n'est pas authentifié après le chargement, ne pas afficher l'interface admin
+  if (!isLoading && (!isAuthenticated || !adminUser)) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
