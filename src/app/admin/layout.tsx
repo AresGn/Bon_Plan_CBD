@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   HomeIcon,
@@ -21,6 +21,14 @@ import {
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 
+interface AdminUser {
+  id: string
+  email: string
+  name?: string
+  role: string
+  image?: string
+}
+
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
   { name: 'Produits', href: '/admin/products', icon: ShoppingBagIcon },
@@ -37,7 +45,56 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false)
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const pathname = usePathname()
+  const router = useRouter()
+
+  // Récupérer les données de l'utilisateur admin connecté
+  useEffect(() => {
+    const checkAdminAuth = () => {
+      try {
+        const token = localStorage.getItem('adminToken')
+        const userStr = localStorage.getItem('adminUser')
+
+        if (!token || !userStr) {
+          router.push('/admin/login')
+          return
+        }
+
+        const userData = JSON.parse(userStr)
+        setAdminUser(userData)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données admin:', error)
+        router.push('/admin/login')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkAdminAuth()
+  }, [router])
+
+  // Fonction de déconnexion
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken')
+    localStorage.removeItem('adminUser')
+    router.push('/admin/login')
+  }
+
+  // Afficher un loader pendant la vérification de l'authentification
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
+            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-neutral-600 font-medium">Chargement de l'interface admin...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-neutral-50 overflow-x-hidden">
@@ -164,6 +221,7 @@ export default function AdminLayout({
           </nav>
           <div className="p-4 border-t">
             <button
+              onClick={handleLogout}
               className={`flex items-center gap-3 w-full px-4 py-3 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 rounded-xl font-medium transition-all ${
                 desktopSidebarCollapsed ? 'justify-center' : ''
               }`}
@@ -227,16 +285,39 @@ export default function AdminLayout({
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <div className="flex items-center gap-3">
-                <Image
-                  src="/images/admin-avatar.jpg"
-                  alt="Admin"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                {isLoading ? (
+                  <div className="w-10 h-10 bg-neutral-200 rounded-full animate-pulse"></div>
+                ) : adminUser?.image ? (
+                  <Image
+                    src={adminUser.image}
+                    alt={adminUser.name || 'Admin'}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full flex items-center justify-center shadow-sm">
+                    <span className="text-white font-bold text-sm">
+                      {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : adminUser?.email.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
                 <div className="hidden sm:block text-right">
-                  <p className="text-sm font-medium text-neutral-900">Admin User</p>
-                  <p className="text-xs text-neutral-500">admin@bonplancbd.fr</p>
+                  {isLoading ? (
+                    <>
+                      <div className="h-4 w-20 bg-neutral-200 rounded animate-pulse mb-1"></div>
+                      <div className="h-3 w-24 bg-neutral-200 rounded animate-pulse"></div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm font-medium text-neutral-900">
+                        {adminUser?.name || 'Administrateur'}
+                      </p>
+                      <p className="text-xs text-neutral-500">
+                        {adminUser?.email || 'admin@bonplancbd.fr'}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
