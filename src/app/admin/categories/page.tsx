@@ -170,7 +170,7 @@ export default function AdminCategoriesPage() {
 
     try {
       const token = localStorage.getItem('adminToken')
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/upload?type=categories', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

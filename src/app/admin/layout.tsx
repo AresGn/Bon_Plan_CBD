@@ -54,6 +54,8 @@ export default function AdminLayout({
   useEffect(() => {
     const checkAdminAuth = () => {
       try {
+
+
         const token = localStorage.getItem('adminToken')
         const userStr = localStorage.getItem('adminUser')
 
@@ -61,7 +63,7 @@ export default function AdminLayout({
           setIsAuthenticated(false)
           setAdminUser(null)
           setIsLoading(false)
-          router.push('/admin/login')
+          router.push('/compte')
           return
         }
 
@@ -78,7 +80,7 @@ export default function AdminLayout({
           setIsLoading(false)
           localStorage.removeItem('adminToken')
           localStorage.removeItem('adminUser')
-          router.push('/admin/login')
+          router.push('/compte')
           return
         }
 
@@ -106,7 +108,7 @@ export default function AdminLayout({
     setIsLoading(true)
     localStorage.removeItem('adminToken')
     localStorage.removeItem('adminUser')
-    router.push('/admin/login')
+    router.push('/compte')
   }
 
   // Afficher un loader pendant la vérification de l'authentification
@@ -137,6 +139,8 @@ export default function AdminLayout({
       </div>
     )
   }
+
+
 
   return (
     <div className="min-h-screen bg-neutral-50 overflow-x-hidden">

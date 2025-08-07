@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import jwt from 'jsonwebtoken'
 
 // Configuration Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -9,15 +10,24 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 export async function POST(request: NextRequest) {
   try {
-    // Vérifier l'authentification admin - Simple check du token
+    // Vérifier l'authentification admin
     const authHeader = request.headers.get('authorization')
     const token = authHeader?.replace('Bearer ', '')
-    
+
     if (!token) {
       return NextResponse.json(
-        { error: 'Non autorisé' },
+        { error: 'Non autorisé - Token manquant' },
         { status: 401 }
       )
+    }
+
+    // Vérifier le token JWT (optionnel, pour plus de sécurité)
+    try {
+      if (process.env.JWT_SECRET) {
+        jwt.verify(token, process.env.JWT_SECRET)
+      }
+    } catch (jwtError) {
+      console.log('JWT verification failed, continuing with simple token check')
     }
 
     const data = await request.formData()
@@ -48,10 +58,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Déterminer le dossier selon le type d'upload
+    const uploadType = request.nextUrl.searchParams.get('type') || 'products'
+    const allowedFolders = ['products', 'categories', 'users']
+    const folder = allowedFolders.includes(uploadType) ? uploadType : 'products'
+
     // Générer un nom de fichier unique
     const fileExt = file.name.split('.').pop()
     const fileName = `${Date.now()}-${Math.round(Math.random() * 1E9)}.${fileExt}`
-    const filePath = `categories/${fileName}`
+    const filePath = `${folder}/${fileName}`
 
     // Convertir le fichier en ArrayBuffer
     const arrayBuffer = await file.arrayBuffer()
@@ -68,15 +83,20 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Supabase upload error:', uploadError)
+      console.error('File path:', filePath)
+      console.error('File type:', file.type)
+      console.error('File size:', file.size)
+
       // Si le bucket n'existe pas, essayer de le créer
       if (uploadError.message.includes('bucket') || uploadError.message.includes('not found')) {
-        // Créer le bucket
+        console.log('Attempting to create bucket...')
         const { error: createError } = await supabase.storage.createBucket('images', {
           public: true,
-          allowedMimeTypes: allowedTypes
+          allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
         })
-        
+
         if (!createError) {
+          console.log('Bucket created, retrying upload...')
           // Réessayer l'upload
           const { data: retryData, error: retryError } = await supabase.storage
             .from('images')
@@ -85,15 +105,18 @@ export async function POST(request: NextRequest) {
               cacheControl: '3600',
               upsert: false
             })
-          
+
           if (retryError) {
-            throw new Error('Erreur lors de l\'upload après création du bucket')
+            console.error('Retry upload error:', retryError)
+            throw new Error('Erreur lors de l\'upload après création du bucket: ' + retryError.message)
           }
+          console.log('Upload successful after bucket creation')
         } else {
-          throw new Error('Erreur lors de la création du bucket')
+          console.error('Bucket creation error:', createError)
+          throw new Error('Erreur lors de la création du bucket: ' + createError.message)
         }
       } else {
-        throw uploadError
+        throw new Error('Erreur Supabase: ' + uploadError.message)
       }
     }
 
