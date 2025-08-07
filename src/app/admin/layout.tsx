@@ -46,6 +46,7 @@ export default function AdminLayout({
   const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false)
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -57,14 +58,34 @@ export default function AdminLayout({
         const userStr = localStorage.getItem('adminUser')
 
         if (!token || !userStr) {
+          setIsAuthenticated(false)
+          setAdminUser(null)
+          setIsLoading(false)
           router.push('/admin/login')
           return
         }
 
         const userData = JSON.parse(userStr)
+
+        // Vérifier que l'utilisateur a le rôle admin
+        if (userData.role !== 'ADMIN') {
+          setIsAuthenticated(false)
+          setAdminUser(null)
+          setIsLoading(false)
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminUser')
+          router.push('/admin/login')
+          return
+        }
+
         setAdminUser(userData)
+        setIsAuthenticated(true)
       } catch (error) {
         console.error('Erreur lors de la récupération des données admin:', error)
+        setIsAuthenticated(false)
+        setAdminUser(null)
+        localStorage.removeItem('adminToken')
+        localStorage.removeItem('adminUser')
         router.push('/admin/login')
       } finally {
         setIsLoading(false)
@@ -76,6 +97,9 @@ export default function AdminLayout({
 
   // Fonction de déconnexion
   const handleLogout = () => {
+    setIsAuthenticated(false)
+    setAdminUser(null)
+    setIsLoading(true)
     localStorage.removeItem('adminToken')
     localStorage.removeItem('adminUser')
     router.push('/admin/login')
@@ -89,7 +113,22 @@ export default function AdminLayout({
           <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-neutral-600 font-medium">Chargement de l'interface admin...</p>
+          <p className="text-neutral-600 font-medium">Vérification de l'authentification...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Si l'utilisateur n'est pas authentifié, ne pas afficher l'interface admin
+  if (!isAuthenticated || !adminUser) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4">
+            <div className="w-6 h-6 text-red-600">⚠</div>
+          </div>
+          <p className="text-neutral-600 font-medium">Accès non autorisé</p>
+          <p className="text-neutral-500 text-sm mt-2">Redirection en cours...</p>
         </div>
       </div>
     )
