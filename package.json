@@ -12,7 +12,7 @@
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
     "build:prod": "next build && next-sitemap",
-    "vercel-build": "next build",
+    "vercel-build": "node scripts/vercel-build.js && next build",
     "test:paygreen": "node scripts/test-paygreen.js"
   },
   "dependencies": {

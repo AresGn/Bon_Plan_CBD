@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import LogoFallback from './LogoFallback'
 
 interface OptimizedImageProps {
   src: string
@@ -44,6 +45,17 @@ export default function OptimizedImage({
   }
 
   if (hasError) {
+    // Si c'est le logo, utiliser le fallback spécifique
+    if (src.includes('logo.jpg')) {
+      return (
+        <LogoFallback
+          width={!fill ? width : 40}
+          height={!fill ? height : 40}
+          className={className}
+        />
+      )
+    }
+
     return (
       <div className={cn(
         'flex items-center justify-center bg-neutral-100 text-neutral-500',

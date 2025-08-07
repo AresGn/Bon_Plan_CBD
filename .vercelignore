@@ -1,0 +1,18 @@
+# Vercel ignore file
+# Ne pas ignorer les images publiques
+!public/images/
+!public/images/logo.jpg
+
+# Ignorer les fichiers de développement
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignorer les fichiers de cache
+.next/cache/
+node_modules/
+
+# Ignorer les fichiers de build locaux
+build-cpanel/
+*.zip

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import OptimizedImage from '@/components/ui/OptimizedImage'
 
 const footerLinks = {
   produits: [
@@ -29,12 +30,15 @@ export default function Footer() {
           {/* Logo et description */}
           <div className="space-y-8 xl:col-span-1">
             <Link href="/" className="flex items-center space-x-2">
-              <Image
+              <OptimizedImage
                 src="/images/logo.jpg"
                 alt="Bon Plan CBD"
                 width={40}
                 height={40}
                 className="h-10 w-auto"
+                priority={false}
+                quality={85}
+                sizes="40px"
               />
               <div>
                 <span className="text-xl font-bold">Bon Plan CBD</span>
@@ -132,12 +136,15 @@ export default function Footer() {
         <div className="mt-12 border-t border-neutral-800 pt-8">
           <div className="flex flex-col items-center space-y-4 md:flex-row md:justify-between md:space-y-0">
             <div className="flex items-center space-x-4">
-              <Image
+              <OptimizedImage
                 src="/images/logo.jpg"
                 alt="Bon Plan Pro 76"
                 width={32}
                 height={32}
                 className="h-8 w-auto"
+                priority={false}
+                quality={85}
+                sizes="32px"
               />
               <div className="flex flex-col">
                 <p className="text-base text-neutral-400">
