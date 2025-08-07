@@ -233,6 +233,22 @@ export default function AccountPage() {
     setLoading(false)
   }
 
+  const handleAdminAccess = () => {
+    if (userData && userData.role === 'ADMIN') {
+      // Préparer les données admin
+      const token = localStorage.getItem('auth-token')
+      if (token) {
+        localStorage.setItem('adminToken', token)
+        localStorage.setItem('adminUser', JSON.stringify(userData))
+        router.push('/admin')
+      } else {
+        toast.error('Erreur d\'authentification')
+      }
+    } else {
+      toast.error('Accès non autorisé')
+    }
+  }
+
   // Formulaire de connexion
   const LoginForm = () => {
     const [email, setEmail] = useState('')
@@ -444,9 +460,12 @@ export default function AccountPage() {
               <div className="card p-6">
                 <h2 className="text-lg font-medium text-neutral-900 mb-4">Admin Dashboard</h2>
                 <p className="text-neutral-600">Bienvenue dans la section administration.</p>
-                <Link href="/admin" className="btn-primary mt-4 inline-flex">
+                <button
+                  onClick={handleAdminAccess}
+                  className="btn-primary mt-4 inline-flex"
+                >
                   Aller à l'administration
-                </Link>
+                </button>
               </div>
             )}
           </main>

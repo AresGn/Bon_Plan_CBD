@@ -41,8 +41,11 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
       },
+      {
+        protocol: "https",
+        hostname: "bon-plan-cbd.fr",
+      },
     ],
-    domains: ['localhost', 'bon-plan-cbd.fr'],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 31536000,
     deviceSizes: [640, 750, 1080, 1920],

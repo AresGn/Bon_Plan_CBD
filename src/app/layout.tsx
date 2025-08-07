@@ -25,6 +25,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'Bon Plan Pro 76 - La Qualité au Meilleur Prix | Rouen',
   description: 'Découvrez notre sélection premium de produits CBD : fleurs, résines, infusions. Magasin à Rouen avec conseils personnalisés.',
   keywords: 'CBD, Rouen, fleurs CBD, résine CBD, infusion CBD, cannabidiol, boutique CBD',

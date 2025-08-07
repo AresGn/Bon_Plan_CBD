@@ -64,12 +64,12 @@ export const useAdminAuth = () => {
     }
     setAdminUser(null)
     setIsAuthenticated(false)
-    router.push('/admin/login')
+    router.push('/compte')
   }
 
   const requireAuth = () => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/admin/login')
+      router.push('/compte')
       return false
     }
     return true

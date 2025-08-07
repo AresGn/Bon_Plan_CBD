@@ -92,7 +92,7 @@ export default function AdminLayout({
         setAdminUser(null)
         localStorage.removeItem('adminToken')
         localStorage.removeItem('adminUser')
-        router.push('/admin/login')
+        router.push('/compte')
       } finally {
         setIsLoading(false)
       }
