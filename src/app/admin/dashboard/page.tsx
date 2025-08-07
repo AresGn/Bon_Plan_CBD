@@ -8,8 +8,7 @@ import {
   UsersIcon, 
   ShoppingBagIcon, 
   ChartBarIcon,
-  PlusIcon,
-  ArrowRightOnRectangleIcon
+  PlusIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -57,27 +56,20 @@ export default function AdminDashboard() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des stats');
+        throw new Error('Erreur lors du chargement des statistiques');
       }
 
       const data = await response.json();
       setStats({
-        totalProducts: data.overview.totalProducts,
-        totalOrders: data.overview.totalOrders,
-        totalUsers: data.overview.totalUsers,
-        totalRevenue: data.overview.totalRevenue
+        totalProducts: data.totalProducts || 0,
+        totalOrders: data.totalOrders || 0,
+        totalUsers: data.totalUsers || 0,
+        totalRevenue: data.totalRevenue || 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
       toast.error('Erreur lors du chargement des statistiques');
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
-    toast.success('Déconnexion réussie');
-    router.push('/admin/login');
   };
 
   if (!user) {
@@ -92,215 +84,198 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Dashboard Administrateur
-            </h1>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Bienvenue, {user.name || user.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-6">
+      {/* Dashboard Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-neutral-900">
+          Dashboard Administrateur
+        </h1>
+        <p className="text-neutral-600 mt-2">
+          Bienvenue, {user.name || user.email}
+        </p>
+      </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="space-y-8">
         {/* Stats Grid */}
-        <div className="px-4 py-6 sm:px-0">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Produits */}
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <CubeIcon className="h-6 w-6 text-primary-600" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Produits
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {stats.totalProducts}
-                      </dd>
-                    </dl>
-                  </div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Produits */}
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <CubeIcon className="h-6 w-6 text-primary-600" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Produits
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {stats.totalProducts}
+                    </dd>
+                  </dl>
                 </div>
               </div>
-              <div className="bg-gray-50 px-5 py-3">
-                <Link
-                  href="/admin/products"
-                  className="text-sm font-medium text-primary-600 hover:text-primary-900"
-                >
-                  Gérer les produits →
+            </div>
+            <div className="bg-gray-50 px-5 py-3">
+              <div className="text-sm">
+                <Link href="/admin/products" className="font-medium text-primary-700 hover:text-primary-900">
+                  Voir tous les produits
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* Commandes */}
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <ShoppingBagIcon className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Commandes
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {stats.totalOrders}
-                      </dd>
-                    </dl>
-                  </div>
+          {/* Commandes */}
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ShoppingBagIcon className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Commandes
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {stats.totalOrders}
+                    </dd>
+                  </dl>
                 </div>
               </div>
-              <div className="bg-gray-50 px-5 py-3">
-                <Link
-                  href="/admin/orders"
-                  className="text-sm font-medium text-green-600 hover:text-green-900"
-                >
-                  Voir les commandes →
+            </div>
+            <div className="bg-gray-50 px-5 py-3">
+              <div className="text-sm">
+                <Link href="/admin/orders" className="font-medium text-primary-700 hover:text-primary-900">
+                  Voir toutes les commandes
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* Utilisateurs */}
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <UsersIcon className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Utilisateurs
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {stats.totalUsers}
-                      </dd>
-                    </dl>
-                  </div>
+          {/* Utilisateurs */}
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <UsersIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Utilisateurs
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {stats.totalUsers}
+                    </dd>
+                  </dl>
                 </div>
               </div>
-              <div className="bg-gray-50 px-5 py-3">
-                <Link
-                  href="/admin/users"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-900"
-                >
-                  Gérer les utilisateurs →
+            </div>
+            <div className="bg-gray-50 px-5 py-3">
+              <div className="text-sm">
+                <Link href="/admin/users" className="font-medium text-primary-700 hover:text-primary-900">
+                  Voir tous les utilisateurs
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* Revenus */}
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <ChartBarIcon className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Revenus Total
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {stats.totalRevenue.toFixed(2)}€
-                      </dd>
-                    </dl>
-                  </div>
+          {/* Revenus */}
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ChartBarIcon className="h-6 w-6 text-yellow-600" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Revenus
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {stats.totalRevenue.toFixed(2)} €
+                    </dd>
+                  </dl>
                 </div>
               </div>
-              <div className="bg-gray-50 px-5 py-3">
-                <Link
-                  href="/admin/analytics"
-                  className="text-sm font-medium text-purple-600 hover:text-purple-900"
-                >
-                  Voir les analytics →
-                </Link>
+            </div>
+            <div className="bg-gray-50 px-5 py-3">
+              <div className="text-sm">
+                <span className="font-medium text-gray-700">
+                  Total des ventes
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Actions rapides */}
-        <div className="mt-8 px-4 sm:px-0">
-          <h2 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-            Actions rapides
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Link
-              href="/admin/products/new"
-              className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
-            >
-              <div className="flex-shrink-0">
-                <PlusIcon className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="absolute inset-0" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900">
-                  Ajouter un produit
-                </p>
-                <p className="text-sm text-gray-500 truncate">
-                  Créer un nouveau produit CBD
-                </p>
-              </div>
-            </Link>
+        <div className="bg-white shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              Actions rapides
+            </h3>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Link
+                href="/admin/products/new"
+                className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+              >
+                <div className="flex-shrink-0">
+                  <PlusIcon className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="absolute inset-0" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-900">
+                    Nouveau produit
+                  </p>
+                  <p className="text-sm text-gray-500 truncate">
+                    Ajouter un produit au catalogue
+                  </p>
+                </div>
+              </Link>
 
-            <Link
-              href="/admin/categories"
-              className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
-            >
-              <div className="flex-shrink-0">
-                <CubeIcon className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="absolute inset-0" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900">
-                  Gérer les catégories
-                </p>
-                <p className="text-sm text-gray-500 truncate">
-                  Organiser vos produits
-                </p>
-              </div>
-            </Link>
+              <Link
+                href="/admin/orders"
+                className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+              >
+                <div className="flex-shrink-0">
+                  <ShoppingBagIcon className="h-6 w-6 text-orange-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="absolute inset-0" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-900">
+                    Gérer les commandes
+                  </p>
+                  <p className="text-sm text-gray-500 truncate">
+                    Voir et traiter les commandes
+                  </p>
+                </div>
+              </Link>
 
-            <Link
-              href="/admin/settings"
-              className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
-            >
-              <div className="flex-shrink-0">
-                <ChartBarIcon className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="absolute inset-0" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900">
-                  Paramètres
-                </p>
-                <p className="text-sm text-gray-500 truncate">
-                  Configuration du site
-                </p>
-              </div>
-            </Link>
+              <Link
+                href="/admin/settings"
+                className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+              >
+                <div className="flex-shrink-0">
+                  <ChartBarIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="absolute inset-0" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-900">
+                    Paramètres
+                  </p>
+                  <p className="text-sm text-gray-500 truncate">
+                    Configuration du site
+                  </p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

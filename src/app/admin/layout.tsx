@@ -16,7 +16,6 @@ import {
   Bars3Icon,
   XMarkIcon,
   ArrowLeftOnRectangleIcon,
-  BellIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -280,10 +279,6 @@ export default function AdminLayout({
             </div>
 
             <div className="flex items-center gap-4">
-              <button className="relative p-2 rounded-lg hover:bg-neutral-100">
-                <BellIcon className="h-6 w-6 text-neutral-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
               <div className="flex items-center gap-3">
                 {isLoading ? (
                   <div className="w-10 h-10 bg-neutral-200 rounded-full animate-pulse"></div>
