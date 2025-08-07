@@ -27,8 +27,10 @@ export default function PayGreenProvider({ children }: PayGreenProviderProps) {
     console.log('PayGreen SDK chargé avec succès')
   }
 
-  const handlePayGreenError = () => {
-    console.error('Erreur lors du chargement du SDK PayGreen')
+  const handlePayGreenError = (error: any) => {
+    console.warn('PayGreen SDK non disponible en développement:', error?.message || 'Erreur inconnue')
+    // En développement, on continue sans bloquer l'application
+    setIsPayGreenLoaded(false)
   }
 
   // Pendant le SSR, retourner les enfants sans le provider
@@ -36,18 +38,25 @@ export default function PayGreenProvider({ children }: PayGreenProviderProps) {
     return <>{children}</>
   }
 
-  const payGreenUrl = process.env.NEXT_PUBLIC_PAYGREEN_ENV === 'production'
+  const payGreenEnv = process.env.NEXT_PUBLIC_PAYGREEN_ENV || 'sandbox'
+  const payGreenUrl = payGreenEnv === 'production'
     ? 'https://paygreen.fr/js/pg.min.js'
     : 'https://sb-paygreen.fr/js/pg.min.js'
 
+  // En développement local, on peut désactiver PayGreen si nécessaire
+  const shouldLoadPayGreen = process.env.NODE_ENV === 'production' ||
+                            process.env.NEXT_PUBLIC_ENABLE_PAYGREEN === 'true'
+
   return (
     <>
-      <Script
-        src={payGreenUrl}
-        onLoad={handlePayGreenLoad}
-        onError={handlePayGreenError}
-        strategy="lazyOnload"
-      />
+      {shouldLoadPayGreen && (
+        <Script
+          src={payGreenUrl}
+          onLoad={handlePayGreenLoad}
+          onError={handlePayGreenError}
+          strategy="lazyOnload"
+        />
+      )}
       {children}
     </>
   )

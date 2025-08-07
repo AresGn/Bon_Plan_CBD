@@ -6,6 +6,8 @@ import Footer from '@/components/layout/Footer'
 import { Toaster } from 'react-hot-toast'
 import AgeGate from '@/components/AgeGate'
 import PayGreenProvider from '@/components/providers/PayGreenProvider'
+import { usePathname } from 'next/navigation'
+import ConditionalLayout from '@/components/layout/ConditionalLayout'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -67,11 +69,9 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <PayGreenProvider>
           <AgeGate>
-            <Header />
-            <main className="flex-grow">
+            <ConditionalLayout>
               {children}
-            </main>
-            <Footer />
+            </ConditionalLayout>
             <Toaster
               position="bottom-right"
               toastOptions={{

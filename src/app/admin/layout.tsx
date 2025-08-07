@@ -36,10 +36,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false)
   const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-neutral-50 overflow-x-hidden">
       {/* Mobile sidebar */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -55,7 +56,7 @@ export default function AdminLayout({
               initial={{ x: -300 }}
               animate={{ x: 0 }}
               exit={{ x: -300 }}
-              transition={{ type: 'spring', damping: 25 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className="fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl lg:hidden"
             >
               <div className="flex h-full flex-col">
@@ -100,8 +101,10 @@ export default function AdminLayout({
       </AnimatePresence>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex h-full flex-col bg-white border-r">
+      <div className={`hidden lg:fixed lg:inset-y-0 lg:flex lg:flex-col transition-all duration-300 ease-in-out ${
+        desktopSidebarCollapsed ? 'lg:w-20 xl:w-20' : 'lg:w-72 xl:w-80 2xl:w-80'
+      }`}>
+        <div className="flex h-full flex-col bg-white border-r shadow-lg backdrop-blur-sm">
           <div className="flex h-20 items-center px-6 border-b">
             <Link href="/admin" className="flex items-center gap-3">
               <motion.div
@@ -111,10 +114,17 @@ export default function AdminLayout({
               >
                 <span className="text-white font-bold text-2xl">A</span>
               </motion.div>
-              <div>
-                <span className="text-xl font-bold text-neutral-900">Admin Panel</span>
-                <p className="text-xs text-neutral-500">Bon Plan CBD</p>
-              </div>
+              {!desktopSidebarCollapsed && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className="text-xl font-bold text-neutral-900">Admin Panel</span>
+                  <p className="text-xs text-neutral-500">Bon Plan CBD</p>
+                </motion.div>
+              )}
             </Link>
           </div>
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
@@ -124,14 +134,24 @@ export default function AdminLayout({
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`relative flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
                     isActive
                       ? 'bg-primary-50 text-primary-700 shadow-sm'
                       : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
-                  }`}
+                  } ${desktopSidebarCollapsed ? 'justify-center' : ''}`}
+                  title={desktopSidebarCollapsed ? item.name : undefined}
                 >
-                  <item.icon className="h-5 w-5" />
-                  {item.name}
+                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  {!desktopSidebarCollapsed && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {item.name}
+                    </motion.span>
+                  )}
                   {isActive && (
                     <motion.div
                       layoutId="activeTab"
@@ -143,25 +163,52 @@ export default function AdminLayout({
             })}
           </nav>
           <div className="p-4 border-t">
-            <button className="flex items-center gap-3 w-full px-4 py-3 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 rounded-xl font-medium transition-all">
-              <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-              Déconnexion
+            <button
+              className={`flex items-center gap-3 w-full px-4 py-3 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 rounded-xl font-medium transition-all ${
+                desktopSidebarCollapsed ? 'justify-center' : ''
+              }`}
+              title={desktopSidebarCollapsed ? 'Déconnexion' : undefined}
+            >
+              <ArrowLeftOnRectangleIcon className="h-5 w-5 flex-shrink-0" />
+              {!desktopSidebarCollapsed && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Déconnexion
+                </motion.span>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-72">
+      <div className={`transition-all duration-300 ease-in-out ${
+        desktopSidebarCollapsed
+          ? 'lg:pl-20 xl:pl-20'
+          : 'lg:pl-72 xl:pl-80 2xl:pl-80'
+      }`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-white border-b">
+        <header className="sticky top-0 z-30 bg-white border-b shadow-sm">
           <div className="flex h-20 items-center justify-between px-6">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-2 rounded-lg hover:bg-neutral-100 lg:hidden"
-            >
-              <Bars3Icon className="h-6 w-6" />
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 rounded-lg hover:bg-neutral-100 transition-colors lg:hidden"
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
+              <button
+                onClick={() => setDesktopSidebarCollapsed(!desktopSidebarCollapsed)}
+                className="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 transition-colors group"
+                title={desktopSidebarCollapsed ? 'Étendre la sidebar' : 'Réduire la sidebar'}
+              >
+                <Bars3Icon className="h-6 w-6 group-hover:scale-110 transition-transform" />
+              </button>
+            </div>
 
             <div className="flex-1 max-w-2xl mx-4">
               <div className="relative">
